@@ -177,3 +177,11 @@ Meetiva aims to transform online networking by making every conversation intenti
 ##  License
 
 This project was developed as a full-stack mobile application for educational purposes using modern software engineering practices and AI integration.
+
+## Academic Review Notice
+
+This repository may be shared temporarily with instructors, mentors, or authorized reviewers strictly for academic evaluation, code review, debugging, or assessment purposes.
+
+Such access does not grant permission to copy, reuse, redistribute, publish, or commercialize any part of the project.
+
+All intellectual property rights remain exclusively owned by the project author unless otherwise agreed in writing.
