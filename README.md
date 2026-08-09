@@ -6,7 +6,7 @@
 
 <p align="center">
   <img src="./assets/screenshoots/intro-00.png width="250" />
-    <img src="./assets/screenshoots/intro-01.png width="250" />
+  <img src="./assets/screenshoots/intro-01.png width="250" />
 </p>
 
 ### Authentication
