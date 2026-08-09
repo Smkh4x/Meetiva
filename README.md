@@ -11,6 +11,14 @@
 
 ### Authentication
 
+### Login 
+
+<p align="center">
+  <img src="./assets/screenshoots/login.png" width="250" />
+</p>
+
+### Register
+
 <p align="center">
   <img src="./assets/screenshoots/login.png" width="250" />
   <img src="./assets/screenshoots/register-00.png" width="250" />
