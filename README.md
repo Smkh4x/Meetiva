@@ -5,8 +5,9 @@
 ### Onboarding
 
 <p align="center">
-  <img src="./assets/screenshoots/intro-00.png" width="250" />
-  <img src="./assets/screenshoots/intro-01.png" width="250" />
+
+  <img src="./mobile/assets/screenshoots/intro-00.png" width="250" />
+  <img src="./mobile/assets/screenshoots/intro-01.png" width="250" />
 </p>
 
 ### Authentication
@@ -14,27 +15,27 @@
 ### Login 
 
 <p align="center">
-  <img src="./assets/screenshoots/login.png" width="250" />
+  <img src="./mobile/assets/screenshoots/login.png" width="250" />
 </p>
 
 ### Register
 
 <p align="center">
-  <img src="./assets/screenshoots/login.png" width="250" />
-  <img src="./assets/screenshoots/register-00.png" width="250" />
-  <img src="./assets/screenshoots/register-01.png" width="250" />
-  <img src="./assets/screenshoots/register-02.png" width="250" />
-  <img src="./assets/screenshoots/register-03.png" width="250" />
-  <img src="./assets/screenshoots/register-04.png" width="250" />
-  <img src="./assets/screenshoots/register-05.png" width="250" />
+  <img src="./mobile/assets/screenshoots/login.png" width="250" />
+  <img src="./mobile/assets/screenshoots/register-00.png" width="250" />
+  <img src="./mobile/assets/screenshoots/register-01.png" width="250" />
+  <img src="./mobile/assets/screenshoots/register-02.png" width="250" />
+  <img src="./mobile/assets/screenshoots/register-03.png" width="250" />
+  <img src="./mobile/assets/screenshoots/register-04.png" width="250" />
+  <img src="./mobile/assets/screenshoots/register-05.png" width="250" />
 </p>
 
 ### App
 
 <p align="center">
-  <img src="./assets/screenshoots/home-00.png" width="250" />
-  <img src="./assets/screenshoots/home-01.png" width="250" />
-  <img src="./assets/screenshoots/home-02.png" width="250" />
+  <img src="./mobile/assets/screenshoots/home-00.png" width="250" />
+  <img src="./mobile/assets/screenshoots/home-01.png" width="250" />
+  <img src="./mobile/assets/screenshoots/home-02.png" width="250" />
 </p>
 
 
