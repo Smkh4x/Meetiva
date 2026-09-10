@@ -1,16 +1,28 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image, BackHandler } from 'react-native'
 import React from 'react'
 import Button from '@/src/components/ui/Button'
 import { darkColors } from '@/src/theme/colors'
-import { router, Router } from 'expo-router'
+import { router } from 'expo-router'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
 export default function onboarding() {
   return (
-<View style={style.conatiner}>
+<SafeAreaView style={style.conatiner}>
 
-    <View style={{gap: 20}}>
+    <View style={style.header}>
+        <Image style={style.Image} source={require('../../assets/images/Meetiva-logo.png')}/>
+        <Text style={{color: "white", fontSize: 12}}>Meet people. Inspire minds. Create value. Advance together</Text>
+    </View>
+
+    <View style={style.cards}>
+        <View></View>
+
+    </View>
+
+
+    <View style={{gap: 20, marginBottom: 40}}>
         <Button 
         text_button="Create Account"
         containerStyle={{
@@ -64,17 +76,28 @@ export default function onboarding() {
     </View>
   
 
-</View>
+</SafeAreaView>
   )
 }
 
 const style = StyleSheet.create({
     conatiner: {
         flex: 1,
-        gap: 30,
         justifyContent: 'center',
         paddingHorizontal: 20,
         backgroundColor: darkColors.background
 
+    },
+    header: {
+        flex: 1,
+        alignItems: "center",
+    },
+    Image: {
+        width: 100,
+        height: 100,
+    },
+    cards: {
+        flex: 1,
+        justifyContent: "center",
     }
 })

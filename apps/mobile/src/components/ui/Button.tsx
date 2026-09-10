@@ -11,7 +11,7 @@ type ButtonProp = {
 export default function Button({text_button, containerStyle, TextStyle, onpress}: ButtonProp) {
   return (
     <TouchableOpacity 
-    style={containerStyle} 
+    style={containerStyle}
     onPress={onpress}
     
     >

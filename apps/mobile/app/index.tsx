@@ -7,8 +7,11 @@ import { darkColors } from '@/src/theme/colors'
 export default function index() {
   useEffect(() => {
     const waiting = async () => {
+
     await new Promise(resolve => setTimeout(resolve, 2000));
-    router.replace('/(auth)/onboarding')
+
+    router.replace('/(auth)/onboarding');
+
     }
     waiting();
 
