@@ -1,0 +1,24 @@
+{
+  "name": "meetiva",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@12.3.4",
+  "type": "module",
+  "scripts": {
+    "run:api": "pnpm --filter api dev",
+    "run:android": "pnpm --filter mobile android",
+    "run:ios": "pnpm --filter mobile ios",
+    "docker:up": "docker compose --env-file .env -f infrastructure/docker/docker-compose.yml up -d",
+    "docker:down": "docker compose --env-file .env -f infrastructure/docker/docker-compose.yml down"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.3.4",
+      "onFail": "download"
+    }
+  }
+}
