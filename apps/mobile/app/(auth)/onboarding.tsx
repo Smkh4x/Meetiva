@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, BackHandler } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import React from 'react'
 import Button from '@/src/components/ui/Button'
 import { darkColors } from '@/src/theme/colors'
@@ -16,8 +16,28 @@ export default function onboarding() {
         <Text style={{color: "white", fontSize: 12}}>Meet people. Inspire minds. Create value. Advance together</Text>
     </View>
 
-    <View style={style.cards}>
-        <View></View>
+    <View style={style.cardsContainer}>
+        <View style={[style.card, style.centerCard]}>
+            <Image
+            source={require('../../assets/images/peo1.jpg')}
+            resizeMode="cover"
+            style={style.cardImage}
+            />
+        </View>
+        <View style={[style.card, style.leftCard]}>
+            <Image
+            source={require('../../assets/images/peo2.jpg')}
+            resizeMode="cover"
+            style={style.cardImage}
+            />
+        </View>
+        <View style={[style.card, style.rigthCard]}>
+            <Image
+            source={require('../../assets/images/peo3.jpg')}
+            resizeMode="cover"
+            style={style.cardImage}
+            />
+        </View>
 
     </View>
 
@@ -96,8 +116,50 @@ const style = StyleSheet.create({
         width: 100,
         height: 100,
     },
-    cards: {
-        flex: 1,
-        justifyContent: "center",
+    cardsContainer: {
+    height: 480,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    },
+    card: {
+    width: 140,
+    height: 210,
+    backgroundColor: 'white',
+    elevation: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#333', 
+    position: 'absolute',
+    overflow: 'hidden'
+    },
+    leftCard: {
+        transform: [
+            {translateX: -60},
+            {rotate: '-15deg'}
+        ],
+        zIndex: 1
+
+    },
+    rigthCard: {
+        transform: [
+            {translateX: 60},
+            {rotate: '15deg'}
+        ],
+        zIndex: 1
+        
+    },
+    centerCard: {
+        zIndex: 2,
+        elevation: 5,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+
+    },
+    cardImage: {
+    width: '100%',
+    height: '100%',
     }
 })

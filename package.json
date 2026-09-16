@@ -20,5 +20,9 @@
       "version": "12.3.4",
       "onFail": "download"
     }
+  },
+  "dependencies": {
+    "nodemailer": "^10.0.10",
+    "react-native-safe-area-context": "^5.9.1"
   }
 }
