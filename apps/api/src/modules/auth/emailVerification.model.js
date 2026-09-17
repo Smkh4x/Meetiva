@@ -1,7 +1,7 @@
-import database from "../../config/database";
+import database from "../../config/database.js";
 import { DataTypes } from "sequelize";
 
-const EmailVerification = database.define("EmailVerification", {
+const EmailVerifications = database.define("EmailVerification", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -22,6 +22,8 @@ const EmailVerification = database.define("EmailVerification", {
     type: DataTypes.DATE,
     allowNull: false,
   },
+},{
+    tableName: 'EmailVerification',  
 })
 
-export default EmailVerification;
+export default EmailVerifications;

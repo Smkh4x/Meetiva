@@ -1,11 +1,11 @@
 import { DataTypes } from "sequelize";
-import Database from "../../config/database";
-import database from "../../config/database";
+import Database from "../../config/database.js";
+
 
 const Users = Database.define("Users", {
     id: {
         type: DataTypes.INTEGER,
-        primarykey: true,
+        primaryKey: true,
         autoIncrement: true,
     },
     userName: {
@@ -41,8 +41,8 @@ const Users = Database.define("Users", {
             }
         }
     },
-    user_interests: {
-        type: DataTypes.STRING,
+    user_Interests: {
+        type: DataTypes.STRING, //interest name "category" 
         allowNull: false,
 
     },
