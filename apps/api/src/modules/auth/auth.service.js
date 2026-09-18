@@ -4,6 +4,8 @@ import Users from "../users/user.model.js";
 import email_service from "./email_service.js";
 import EmailVerifications from "./emailVerification.model.js";
 import { Op } from 'sequelize';
+import { sign } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
 
 
 const auth_Service = {
@@ -11,13 +13,13 @@ const auth_Service = {
     sendVerificationCode: async (email) => {
         
         try {
-            const user_existing = await Users.findOne({
+            const user_Existing = await Users.findOne({
                 where: {
                     email: email.email   
                 }
             })
 
-            if(user_existing) {
+            if(user_Existing) {
                 return {
                     success: false,
                     message: "Email already exits"
@@ -41,7 +43,7 @@ const auth_Service = {
     verifyCode: async (email, code) => {
 
         try {
-            const Verification = await EmailVerifications.findOne({
+            const user_Verification = await EmailVerifications.findOne({
                 where: {
                     email: email,
                 },
@@ -51,21 +53,21 @@ const auth_Service = {
             })
             // console.log(Verification.email, Verification.code);
 
-            if (!Verification) {
+            if (!user_Verification) {
                 return {
                     success: false,
                     message: "Verification code not found"
                 };
             }
 
-            if( new Date() > Verification.expiresAt){
+            if( new Date() > user_Verification.expiresAt){
                 return {
                     success: false,
                     message: "Verification code expired"
                 }
             }
 
-            const isTrue = await bcrypt.compare(code, Verification.code);
+            const isTrue = await bcrypt.compare(code, user_Verification.code);
 
             if(!isTrue) {
                 return {
@@ -86,33 +88,67 @@ const auth_Service = {
         }
     },
 
-    register: async (user_req_body) => {
+    register: async (register_req_body) => {
 
-        console.log(user_req_body)
+        console.log("data : ", register_req_body);
 
-        const user = await Users.findOne({
+        console.log(register_req_body)
+
+        const user_existing = await Users.findOne({
             where: {
                 [Op.or]: [
-                    {email: user_req_body.email},
-                    {username: user_req_body.userName}
+                    {email: register_req_body.email},
+                    {username: register_req_body.userName}
                 ]
             }
         })
 
-        if(existing_user) {
+        if(user) {
 
-            if(existing_user.email === user_req_body.email) {
+            if(user_existing.email === register_req_body.email) {
                 throw new Error("Email already exists")
+            };
+
+            if(user_existing.userName === register_req_body.userName) {
+                throw new Error("Username already exists")
+            };
+
+            return { success: false }
+        };
+
+        if(!register_req_body.age || !register_req_body.password || !register_req_body.user_interests){
+
+            return {
+                success: false,
+                message: "please full the input"
             }
 
-            if(existing_user.username === user_req_body.userName)   {
-                throw new Error("Username already exists")
-            }
-            
         }
+        const pass_Hash = await bcrypt.hash(register_req_body.password, 10);
+
+        const new_User = await Users.create({
+            email: register_req_body.email,
+            userName: register_req_body.userName,
+            age: register_req_body.age,
+            password: pass_Hash,
+            user_interests: register_req_body.user_interests,
+        })
+
+        const auth_Token = jwt.sign({
+            id: new_User.id
+        },
+            process.env.JWT_SEC,
+        {
+            expiresIn: process.env.JWT_EXP,
+        })
+
+        console.log("Token : ", auth_Token);
+
+        return auth_Token
+
     },
 
-    login: async () => {
+    login: async (login_req_body) => {
         
     }
 
