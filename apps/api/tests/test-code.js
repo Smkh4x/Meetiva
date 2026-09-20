@@ -4,8 +4,8 @@ import "dotenv/config"
 
 try {
     await auth_Service.verifyCode(
-        "khaliddrihem59@gmail.com",
-        "931050"
+        "hitorikaizo@gmail.com",
+        "750993"
     )
     
 } catch (err) {

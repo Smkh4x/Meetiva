@@ -41,8 +41,8 @@ const Users = Database.define("Users", {
             }
         }
     },
-    user_Interests: {
-        type: DataTypes.STRING, //interest name "category" 
+    user_interests: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER), //interest name "category" 
         allowNull: false,
 
     },

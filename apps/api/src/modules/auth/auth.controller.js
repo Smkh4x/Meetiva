@@ -1,3 +1,4 @@
+import Users from "../users/user.model";
 import auth_Service from "./auth.service";
 
 
@@ -53,6 +54,16 @@ class register {
             }        
         }
     login = async (req, res, next) => {
+        try {
+            const user = await auth_Service.login(req.body);
+            
+            return res.status(200).json(user);
+            
+        } catch (err) {
+            console.log(err.message)
+            next(err)
+            
+        }
 
     }
 

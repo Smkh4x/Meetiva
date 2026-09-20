@@ -3,14 +3,15 @@ import OTP_code from "../../utils/otp_code.js";
 import Users from "../users/user.model.js";
 import email_service from "./email_service.js";
 import EmailVerifications from "./emailVerification.model.js";
-import { Op } from 'sequelize';
-import { sign } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken'
+import { Op } from 'sequelize';
 
 
 const auth_Service = {
 
     sendVerificationCode: async (email) => {
+
+        console.log(email)
         
         try {
             const user_Existing = await Users.findOne({
@@ -28,7 +29,7 @@ const auth_Service = {
 
             const generated_code = await OTP_code(email.email);
 
-            // console.log("generated success : ",generated_code);
+            console.log("generated success : ",generated_code);
 
             await email_service(email.email, generated_code);
 
@@ -83,27 +84,31 @@ const auth_Service = {
                 message: "Email verified successfully"
             };
 
-        } catch (error) {
+        } catch (err) {
+            next(err)
             
         }
     },
 
     register: async (register_req_body) => {
 
-        console.log("data : ", register_req_body);
+        try {
 
-        console.log(register_req_body)
+             console.log("data : ", register_req_body);
+
+        console.log("ana step 1")
+
 
         const user_existing = await Users.findOne({
             where: {
                 [Op.or]: [
                     {email: register_req_body.email},
-                    {username: register_req_body.userName}
+                    {userName: register_req_body.userName}
                 ]
             }
         })
 
-        if(user) {
+        if(user_existing) {
 
             if(user_existing.email === register_req_body.email) {
                 throw new Error("Email already exists")
@@ -113,10 +118,11 @@ const auth_Service = {
                 throw new Error("Username already exists")
             };
 
-            return { success: false }
         };
 
-        if(!register_req_body.age || !register_req_body.password || !register_req_body.user_interests){
+        console.log("ana step 2")
+
+        if(!register_req_body.age || !register_req_body.password){
 
             return {
                 success: false,
@@ -124,7 +130,12 @@ const auth_Service = {
             }
 
         }
+
+        console.log("step 3")
+
         const pass_Hash = await bcrypt.hash(register_req_body.password, 10);
+
+        console.log("step 4 pass:", pass_Hash)
 
         const new_User = await Users.create({
             email: register_req_body.email,
@@ -133,6 +144,8 @@ const auth_Service = {
             password: pass_Hash,
             user_interests: register_req_body.user_interests,
         })
+
+        console.log("user created :", new_User)
 
         const auth_Token = jwt.sign({
             id: new_User.id
@@ -146,11 +159,66 @@ const auth_Service = {
 
         return auth_Token
 
+        } catch (err) {
+            console.log(err.message)
+            
+        }
+
+        
     },
 
-    login: async (login_req_body) => {
+    login: async (login_req_body) => { // userName or email || password
+        try {
+            console.log("your information: ", login_req_body);
+
+            const user_existing = await Users.findOne({
+                where: {
+                    [Op.or]: [
+                        {email: login_req_body.email} || {userName: login_req_body.userName}
+                    ]
+                }
+            })
+
+            console.log("step 1")
+            
+            if(!user_existing){
+                if(user_existing.email !== login_req_body.email || user_existing.userName !== login_req_body.userName){
+                    return {
+                        success: false,
+                        message: "Email or username is not correct"
+                    }
+                }
+            }
+
+            console.log("step 2")
+
+            const isTrue = await bcrypt.compare(login_req_body.password, user_existing.password);
+
+            console.log("password: ", isTrue)
+
+            const user_Token = jwt.sign(
+                {
+                    id: user_existing.id
+                },
+                process.env.JWT_SEC,
+                {
+                    expiresIn: process.env.JWT_EXP
+                }
+    
+            )
+            console.log(user_Token);
+
+            return user_Token;
+
+        } catch (err) {
+            console.log(err.message)
+            
+        }
+
+
         
     }
 
 }
 export default auth_Service;
+//REFRESH_TOKEN
