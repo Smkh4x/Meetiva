@@ -4,7 +4,6 @@
     "slug": "Meetiva",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": null,
     "scheme": "meetiva",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

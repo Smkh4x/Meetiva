@@ -54,7 +54,7 @@ export default function onboarding() {
             borderRadius: 10
         }}
         onpress={() => {
-            router.navigate('/(auth)/register')
+            router.navigate('/(auth)/EmailScreen')
         }}
         TextStyle={
             {
