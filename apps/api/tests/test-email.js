@@ -5,7 +5,8 @@ try {
         "youssefalmouna8@gmail.com",
         "989898"
     )
-    console.log("send success")
+    console.log("send success");
+    
 } catch (error) {
 
     console.log(error.message)

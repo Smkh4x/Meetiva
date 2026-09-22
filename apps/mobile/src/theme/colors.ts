@@ -1,6 +1,6 @@
 export const darkColors = {
   background: '#0890eb',
-  surface: '#0D2B3D',
+  surface: '#52a6db',
   card: '#12394D',
   primary: '#42B9EE',
   secondary: '#1098DF',
