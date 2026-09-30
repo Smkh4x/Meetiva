@@ -1,4 +1,4 @@
-import Interest_user from "./interest.service";
+import Interest_user from "./interest.service.js";
 
 const interest = async(req, res, next) => {
 

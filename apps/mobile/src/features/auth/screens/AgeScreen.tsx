@@ -2,15 +2,20 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import { darkColors } from '@/src/theme/colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Input from '@/src/components/ui/Input'
-import { useState } from 'react'
 import Button from '@/src/components/ui/Button'
 import { router } from 'expo-router'
+import { useState } from 'react'
+import { z } from 'zod'
 
+const shemaAge = z
+  .string()
+  
 
 
 export default function AgeScreen() {
 
-  const [age, setAge] = useState("");
+  const [age , setAge] = useState("")
+
   return (
    <SafeAreaView style={styles.container1}>
 
@@ -112,6 +117,22 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 14,
     fontWeight: "bold",
-    }
+    },
+  input_Container: {
+    backgroundColor: darkColors.surface,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: "center",
+    paddingHorizontal: 12
+  },
+input_Error: {
+  backgroundColor: darkColors.surface,
+  height: 50,
+  borderColor: "red",
+  borderWidth: 1,
+  borderRadius: 10,
+  justifyContent: "center",
+  paddingHorizontal: 14,
+}
 
 })

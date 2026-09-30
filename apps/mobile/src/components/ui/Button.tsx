@@ -2,7 +2,7 @@ import { darkColors } from '@/src/theme/colors'
 import { Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native'
 
 type ButtonProp = {
-    text_button: string;
+    text_button: any;
     containerStyle?: ViewStyle;
     TextStyle?: TextStyle;
     onpress?: () => void;
@@ -13,7 +13,6 @@ export default function Button({text_button, containerStyle, TextStyle, onpress}
     <TouchableOpacity 
     style={containerStyle}
     onPress={onpress}
-    
     >
       <Text style={TextStyle}>
         {text_button}

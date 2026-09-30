@@ -1,13 +1,43 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { darkColors } from '@/src/theme/colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Input from '@/src/components/ui/Input'
 import { useState } from 'react'
 import Button from '@/src/components/ui/Button'
+import { z } from "zod"
+import useRegistrationStore from '@/src/store/auth.store'
 import { router } from 'expo-router'
+import { ActivityIndicator } from 'react-native'
+
+const userNameShema = z
+  .string()
+  .max(20, "Username must be at most 20 characters")
+  .min(3, "Username must be at least 3 characters")
+  .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores")
+  .refine((val) => !/^\d+$/.test(val), {
+    message: "Username cannot consist of numbers only",
+  });
 
 export default function UsernameScreen() {
-  const [username, setUsername] = useState("")
+  const userName = useRegistrationStore((state) => state.userName);
+  const setUserName = useRegistrationStore((state) => state.setUserName);
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const handle_button = () => {
+    setError("")
+    setLoading(true)
+  const validation = userNameShema.safeParse(userName)
+      if(!validation.success){
+        setError(validation.error.issues[0].message);
+        setLoading(false)
+        return;
+      }
+      setLoading(false)
+      router.push('/(auth)/AgeScreen')
+
+  }
+
   return (
     <SafeAreaView style={styles.container1}>
 
@@ -19,16 +49,20 @@ export default function UsernameScreen() {
         <View>
             <Text style={styles.text2}>Username</Text>
             <Input
+            container={[styles.input_Container, error && styles.input_Error]}
             placeholder='Enter a username'
-            value={username}
-            setValue={setUsername}
+            value={userName}
+            setValue={setUserName}
             keyboard='default'
-            />         
+            />
+            {error && (
+              <Text style={{color: "red"}}>{error}</Text>
+          )}     
         </View>
 
         <View>
             <Button
-            text_button='Next'
+            text_button={loading ? <ActivityIndicator/> : "Next"}
             containerStyle={{
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -43,7 +77,7 @@ export default function UsernameScreen() {
                 fontWeight: 'bold'
             }}
             onpress={
-                () => router.push('/(auth)/AgeScreen')
+                handle_button
             }
             />
         </View>
@@ -109,6 +143,22 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 14,
     fontWeight: "bold",
-    }
+    },
+  input_Container: {
+    backgroundColor: darkColors.surface,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: "center",
+    paddingHorizontal: 12
+  },
+  input_Error: {
+    backgroundColor: darkColors.surface,
+    height: 50,
+    borderColor: "red",
+    borderWidth: 1,
+    borderRadius: 10,
+    justifyContent: "center",
+    paddingHorizontal: 14,
+}
 
 })

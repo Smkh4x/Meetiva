@@ -9,11 +9,16 @@ import { Op } from 'sequelize';
 
 const auth_Service = {
 
-    sendVerificationCode: async (email) => {
+    sendVerificationCode: async (email) => { // take email 
 
-        console.log(email)
+        console.log("services step : your email ",email)
         
         try {
+            if(!email) return {
+                    success: false,
+                    message: "condition 1"
+            };
+
             const user_Existing = await Users.findOne({
                 where: {
                     email: email.email   
@@ -26,46 +31,39 @@ const auth_Service = {
                     message: "Email already exits"
                 };
             }
-
             const generated_code = await OTP_code(email.email);
 
             console.log("generated success : ",generated_code);
 
-            await email_service(email.email, generated_code);
+            const result = await email_service(email.email, generated_code);
 
             // console.log('email send code :', generated_code);
-
+            return result;
         } catch (err) {
-            console.log(err.message)
+            throw err
         }
 
     },
 
     verifyCode: async (email, code) => {
 
+        console.log("im in services 1",email, code)
+
         try {
             const user_Verification = await EmailVerifications.findOne({
-                where: {
-                    email: email,
-                },
+                where: { email: email},
+
                 order: [
                     ["createdAt", "DESC"]
                 ]
             })
-            // console.log(Verification.email, Verification.code);
+            console.log(user_Verification)
 
             if (!user_Verification) {
                 return {
                     success: false,
                     message: "Verification code not found"
                 };
-            }
-
-            if( new Date() > user_Verification.expiresAt){
-                return {
-                    success: false,
-                    message: "Verification code expired"
-                }
             }
 
             const isTrue = await bcrypt.compare(code, user_Verification.code);
@@ -77,16 +75,17 @@ const auth_Service = {
                 }
             }
 
-            // console.log("Email verified successfully");
+            if( new Date() > user_Verification.expiresAt){
+                console.log("Verification code expired")
+                return {
+                    success: false,
+                    message: "Verification code expired"
+                }
+            }
 
-            return {
-                success: true,
-                message: "Email verified successfully"
-            };
-
+            return isTrue;
         } catch (err) {
-            next(err)
-            
+            throw err
         }
     },
 

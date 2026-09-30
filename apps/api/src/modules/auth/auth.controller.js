@@ -1,47 +1,52 @@
-import Users from "../users/user.model";
-import auth_Service from "./auth.service";
+import auth_Service from "./auth.service.js";
 
 
 class register {
 
-    sendVerificationCode = async (req, res , next) => {
+    sendVerificationCode = async (req, res) => {
         try {
-            const { email } = req.body
-
-            await auth_Service.sendVerificationCode(email);
+            const result = await auth_Service.sendVerificationCode(req.body); // email
 
             return res.status(200).json({
                 message: "Send code successfuly check ur email",
             });
             
         } catch (err) {
-            // console.log(err.message);
-            next(err)
-             
+            throw err
         }
 
     }
 
-    verifyCode = async (req , res, next) => {
+    verifyCode = async (req , res) => {
         try {
-            const { email, code } = req.body
+            const {
+                email,
+                code
+                } = req.body
+            console.log("controller:", email, code)
 
-            await auth_Service.verifyCode(email, code);
+            const result = await auth_Service.verifyCode(email, code);
 
-            return res.status(200).json({
+                    console.log(result)
+
+                if(result.success === false) {
+                    return res.status(401).json({
+                        message: result.message
+                    })
+                }
+            // console.log("is read or no ? : ",result)
+
+            return res.status(201).json({
                 message: "code verfying successfully"
             });
-            
         } catch (err) {
-            // console.log(err.message)
-            next(err);
+            throw err
+            // next(err);
             
         }
-
     }
 
     register = async (req , res , next) => {
-
         // const { email, userName, age, password, user_interests } = req.body
             try {
                 const user = await auth_Service.register(req.body);
@@ -50,7 +55,6 @@ class register {
 
             } catch (err) {
                 next(err)
-                
             }        
         }
     login = async (req, res, next) => {

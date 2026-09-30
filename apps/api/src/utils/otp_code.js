@@ -6,11 +6,11 @@ async function OTP_code (email) {
 
     const code = crypto.randomInt(100000, 1000000).toString();
 
-    console.log("rndom num :", code);
+    console.log("random num :", code);
 
     const code_hash = await bcrypt.hash(code, 10);
 
-    await EmailVerification.create({
+    const result = await EmailVerification.create({
         email: email,
         code: code_hash,
         expiresAt: new Date(Date.now() + 5 * 60 * 1000)

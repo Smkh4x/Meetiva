@@ -1,12 +1,16 @@
-import register from "./auth.controller";
+import register from "./auth.controller.js";
+import auth_validate from "./middleware/auth.validator.js";
+import {email, verifyCode, register_auth} from '../z_shema/auth.register.js'
+
 
 import express from 'express';
 
 const router = express.Router();
 
-router.post("/auth/send-code", register.sendVerificationCode)
-router.post("/auth/verify-code", register.verifyCode)
-router.post("/auth/register", register.register);
-router.post("/auth/login", register.login);
+router.post("/send-code",auth_validate(email), register.sendVerificationCode)// generic middelware
+router.post("/verifyCode",auth_validate(verifyCode), register.verifyCode)// generic middelware
+router.post("/register",auth_validate(register_auth), register.register);
+router.post("/login", register.login);
+
 
 export default router

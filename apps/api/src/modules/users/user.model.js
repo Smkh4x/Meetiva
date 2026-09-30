@@ -43,7 +43,7 @@ const Users = Database.define("Users", {
     },
     user_interests: {
         type: DataTypes.ARRAY(DataTypes.INTEGER), //interest name "category" 
-        allowNull: false,
+        allowNull: true,
 
     },
 }, {
