@@ -1,5 +1,10 @@
-import 'dotenv/config';
+import axios from "axios";
+
+const api = axios.create({
+    baseURL: process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000"  
+})
 
 
-const API= process.env.PUBLIC_API_URL || process.env.PRIVATE_API_URL;
-console.log(API);
+
+export default api;
+

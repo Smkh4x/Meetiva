@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import database from "../../config/database";
+import database from "../../config/database.js";
 
 
 const Interest = database.define("Interests",{

@@ -4,9 +4,9 @@ import "dotenv/config"
 
 try {
     await auth_Service.sendVerificationCode({
-        email: "hitorikaizo@gmail.com"
+        email: "youssefalmouna8@gmail.com"
 
-    });
+    }); 
     console.log("send req in email");
 
 } catch (err) {

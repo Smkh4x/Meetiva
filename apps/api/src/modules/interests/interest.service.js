@@ -1,4 +1,4 @@
-import Interest from "./interest.model";
+import Interest from "./interest.model.js";
 
 const Interest_user = async(interests_req_body) => {
 

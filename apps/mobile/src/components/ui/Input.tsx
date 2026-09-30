@@ -6,16 +6,19 @@ interface userInput {
     placeholder?: string,
     value?: string,
     setValue?: (value: string) => void,
-    keyboard?: KeyboardTypeOptions
+    keyboard?: KeyboardTypeOptions,
+    container?: any,
+    maxLength?: number
     
 }
-export default function Input({ placeholder, value, setValue, keyboard }:userInput) {
+export default function Input({ placeholder, value, setValue, keyboard, container, maxLength }:userInput) {
   return (
-    <View style={styles.container}>
+    <View >
       <TextInput
-      style={styles.text}
+      style={container}
       placeholder={placeholder}
       value={value}
+      maxLength={maxLength}
       onChangeText={setValue}
       keyboardType={keyboard}
       
@@ -24,13 +27,7 @@ export default function Input({ placeholder, value, setValue, keyboard }:userInp
   )
 }
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: darkColors.surface,
-        height: 50,
-        borderRadius: 10,
-        justifyContent: "center",
-        paddingHorizontal: 12
-    },
+
     text: {
         fontWeight: "200",
         color: 'white'

@@ -1,8 +1,9 @@
 import express from "express";
-import interest from "./interest.controller";
+import interest from "./interest.controller.js";
 
 const router = express.Router();
 
-router.post("interests/validate", interest);
+router.post("/validate", interest);
+
 
 export default router
