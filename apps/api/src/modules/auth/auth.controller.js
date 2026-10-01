@@ -46,6 +46,10 @@ class register {
         }
     }
 
+    verifyUserName = async (reqBody, resBody) => {
+        await auth_Service.verifyUserName(reqBody, resBody);
+    }
+
     register = async (req , res , next) => {
         // const { email, userName, age, password, user_interests } = req.body
             try {

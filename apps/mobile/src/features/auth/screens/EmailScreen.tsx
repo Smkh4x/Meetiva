@@ -67,7 +67,7 @@ function EmailScreen() {
           <Text style={styles.text2}>Email</Text>
             <Input
             container={[styles.input_Container, error && styles.input_Error]}
-            placeholder='your_email@example.com'
+            placeholder={"your_email@example.com"}
             value={email}
             setValue={(text)=>{
               setEmail(text);
@@ -212,6 +212,7 @@ input_Error: {
   borderRadius: 10,
   justifyContent: "center",
   paddingHorizontal: 14,
-}
+},
+
 
 })

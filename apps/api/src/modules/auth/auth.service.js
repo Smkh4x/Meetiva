@@ -5,6 +5,7 @@ import email_service from "./email_service.js";
 import EmailVerifications from "./emailVerification.model.js";
 import jwt from 'jsonwebtoken'
 import { Op } from 'sequelize';
+import { success } from 'zod';
 
 
 const auth_Service = {
@@ -57,7 +58,7 @@ const auth_Service = {
                     ["createdAt", "DESC"]
                 ]
             })
-            console.log(user_Verification)
+            console.log("here => ",user_Verification)
 
             if (!user_Verification) {
                 return {
@@ -87,6 +88,36 @@ const auth_Service = {
         } catch (err) {
             throw err
         }
+    },
+
+    verifyUserName: async (reqBody, resBody) => {
+
+        console.log("=> ",reqBody.body.userName)
+        
+        try {
+            const existing_username = await Users.findOne({
+                where: {
+                    userName: reqBody.body.userName
+                }
+            })
+            console.log("1")
+
+            if(!existing_username){
+                return resBody.status(200).json({
+                    success: true
+                })
+                
+            }
+            return resBody.status(401).json({
+                success: false,
+                message: "this user already exists"
+            })
+            
+        } catch (err) {
+            throw err
+            
+        }
+
     },
 
     register: async (register_req_body) => {

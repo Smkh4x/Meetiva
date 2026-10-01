@@ -8,6 +8,8 @@ import { z } from "zod"
 import useRegistrationStore from '@/src/store/auth.store'
 import { router } from 'expo-router'
 import { ActivityIndicator } from 'react-native'
+import endpoints from '@/src/services/api/services'
+import axios from "axios";
 
 const userNameShema = z
   .string()
@@ -24,17 +26,44 @@ export default function UsernameScreen() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const handle_button = () => {
+  const handle_button = async () => {
     setError("")
-    setLoading(true)
-  const validation = userNameShema.safeParse(userName)
-      if(!validation.success){
-        setError(validation.error.issues[0].message);
-        setLoading(false)
-        return;
+
+    const validation = userNameShema.safeParse(userName)
+      
+        if(!validation.success){
+          setError(validation.error.issues[0].message);
+          return;
+        }
+
+          setLoading(true)
+
+    try {
+      const result = await endpoints.verification_username(userName);
+
+      if(result.data.success == false){
+        console.log(result.data)
       }
-      setLoading(false)
-      router.push('/(auth)/AgeScreen')
+      else if(result.data.success == true){
+        console.log("here 1")
+        router.push('/(auth)/AgeScreen')
+      }
+      // console.log(result.data.success)
+      
+    } catch (err: any) {
+
+      if(axios.isAxiosError(err)){
+        const message = err.response?.data?.message;
+        setError(message ?? "Something went wrong")
+      }
+ 
+    } finally {
+        setLoading(false)
+    }
+
+
+
+      // router.push('/(auth)/AgeScreen')
 
   }
 
@@ -52,7 +81,10 @@ export default function UsernameScreen() {
             container={[styles.input_Container, error && styles.input_Error]}
             placeholder='Enter a username'
             value={userName}
-            setValue={setUserName}
+            setValue={(text) => {
+              setUserName(text)
+              setError("")
+            }}
             keyboard='default'
             />
             {error && (

@@ -4,11 +4,13 @@ interface RegistrationStore {
     email: string,
     userName: string,
     age: number,
+    password: string,
     interests: number[],
 
     setEmail: (email: string) => void;
     setUserName: (userName: string) => void;
     setAge: (age: number) => void;
+    setPassword: (password: string) => void;
     setInterests: (interests: number[]) => void;
 
 }
@@ -16,6 +18,7 @@ const useRegistrationStore = create<RegistrationStore>((set) => ({
     email: "",
     userName: "",
     age: 0,
+    password: "",
     interests: [],
 
     setEmail: (email) => {
@@ -30,12 +33,17 @@ const useRegistrationStore = create<RegistrationStore>((set) => ({
         })
     },
 
-    setAge: (age) => {
+    setAge: (age: number) => {
         set({
             age: age
         })
     },
 
+    setPassword: (password: string) => {
+        set({
+            password: password
+        })
+    },
     setInterests: (interests) => {
         set({
             interests: interests

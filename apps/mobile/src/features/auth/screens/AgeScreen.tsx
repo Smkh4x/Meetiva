@@ -5,16 +5,33 @@ import Input from '@/src/components/ui/Input'
 import Button from '@/src/components/ui/Button'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { z } from 'zod'
+import { number, z } from 'zod'
+import useRegistrationStore from '@/src/store/auth.store'
 
 const shemaAge = z
-  .string()
+  .coerce
+  .number()
+  .min(18, "Meetiva is for people aged 18 and over.")
+  .max(100)
   
-
-
 export default function AgeScreen() {
 
-  const [age , setAge] = useState("")
+  const age = useRegistrationStore((state) => state.age);
+  const setAge = useRegistrationStore((state) => state.setAge);
+  const [error, setError] = useState("")
+
+  const handle_button = () => {
+    setError("")
+
+    const validation = shemaAge.safeParse(age)
+
+    if(!validation.success){
+      setError(validation.error.issues[0].message);
+      return;
+    }
+    router.push('/(auth)/PasswordScreen')
+
+  }
 
   return (
    <SafeAreaView style={styles.container1}>
@@ -27,11 +44,19 @@ export default function AgeScreen() {
         <View>
             <Text style={styles.text2}>age</Text>
             <Input
+            container={[styles.input_Container, error && styles.input_Error]}
             placeholder='0'
             value={age}
-            setValue={setAge}
+            setValue={(text) => {
+              setAge(text);
+              setError("")
+            }}
             keyboard='numeric'
+            maxLength={2}
             />
+            {error && (
+              <Text style={{color: 'red'}}>{error}</Text>
+            )}
         </View>
 
         <View>
@@ -50,9 +75,8 @@ export default function AgeScreen() {
                 fontSize: 14,
                 fontWeight: 'bold'
             }}
-            onpress={
-                () => router.push('/(auth)/PasswordScreen')
-            }
+            onpress={ //router.push('/(auth)/PasswordScreen')
+  handle_button}
             />
         </View>
 
@@ -133,6 +157,6 @@ input_Error: {
   borderRadius: 10,
   justifyContent: "center",
   paddingHorizontal: 14,
-}
+},
 
 })

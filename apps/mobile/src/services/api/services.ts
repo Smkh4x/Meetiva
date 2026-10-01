@@ -1,3 +1,4 @@
+import username from "@/app/(auth)/UsernameScreen";
 import api from "./api";
 
 class endpoints {
@@ -27,6 +28,17 @@ class endpoints {
             console.log("response backend in service:", err.response?.data);
             throw err
         }
+    }
+    verification_username = async (userName: string) => {
+        try {
+        const result = await api.post("/api/auth/verify-username",{userName: userName})
+        return result;
+            
+        } catch (err: any) {
+            throw err
+            
+        }
+
     }
 }
 export default new endpoints()
