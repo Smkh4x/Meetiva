@@ -1,5 +1,6 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, DATE } from "sequelize";
 import database from "../../config/database.js";
+import { date } from "zod/v3";
 
 
 const Interest = database.define("Interests",{
@@ -18,7 +19,8 @@ const Interest = database.define("Interests",{
     
 
 },{
-    tableName: "Interests"
+    tableName: "Interests",
+    timestamps: false
 })
 
 export default Interest

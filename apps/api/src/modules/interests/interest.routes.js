@@ -3,7 +3,7 @@ import interest from "./interest.controller.js";
 
 const router = express.Router();
 
-router.post("/validate", interest);
+router.get("/get-interests", interest.get_interest);
 
 
 export default router

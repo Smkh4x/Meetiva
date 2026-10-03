@@ -1,4 +1,3 @@
-import username from "@/app/(auth)/UsernameScreen";
 import api from "./api";
 
 class endpoints {
@@ -35,6 +34,38 @@ class endpoints {
         return result;
             
         } catch (err: any) {
+            throw err
+            
+        }
+
+    }
+    get_interests = async () => {
+        try {
+            return await api.get("/api/interests/get-interests")
+            
+        } catch (err) {
+            throw err
+            
+        }
+    }
+    register = async (payload: object) => {
+        try {
+            const result = await api.post("/api/auth/register", payload);
+            console.log(result.data)
+            return result.data
+        } catch (err) {
+            console.log(err)
+            throw err
+        }
+    }
+    login = async (payload: object) => {
+        console.log("services => ",payload)
+        try {   
+            const result = await api.post("/api/auth/login", payload);
+            // console.log("[+]",result.data)
+            return result.data
+            
+        } catch (err:any) {
             throw err
             
         }

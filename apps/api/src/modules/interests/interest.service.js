@@ -1,21 +1,11 @@
 import Interest from "./interest.model.js";
 
-const Interest_user = async(interests_req_body) => {
+class interest_services {
 
-    // console.log("interest: ", interest_req_body);
-
-    const interests = await Interest.findAll({
-        where: {
-            id: interests_req_body.user_interests
-        },
-        attributes: ["id"]
-    });
-    if(interests.length !== interests_req_body.user_interests.length){
-
-        throw new Error("Invalid interests")
+    get_interest = async () => {
+        const result = await Interest.findAll()
+        return result;
     }
-
-    return true;
-
 }
-export default Interest_user
+
+export default new interest_services()

@@ -4,37 +4,39 @@ import { number } from 'zod'
 
 
 interface userInput {
-    placeholder?: string,
-    value?: any,
-    setValue?: (value: any) => void,
-    keyboard?: KeyboardTypeOptions,
-    container?: any,
-    maxLength?: number
-    
+  placeholder?: string,
+  value?: any,
+  setValue?: (value: any) => void,
+  keyboard?: KeyboardTypeOptions,
+  container?: any,
+  maxLength?: number,
+  secureTextEntry?: boolean
+
 }
-export default function Input({ placeholder, value, setValue, keyboard, container, maxLength }:userInput) {
+export default function Input({ placeholder, value, setValue, keyboard, container, maxLength, secureTextEntry }: userInput) {
   return (
     <View >
       <TextInput
-      style={container}
-      placeholder={placeholder}
-      placeholderTextColor="#fcfcfc93"
-      
-      value={value}
-      maxLength={maxLength}
-      onChangeText={setValue}
-      keyboardType={keyboard}
-      
-      
+        style={container}
+        placeholder={placeholder}
+        placeholderTextColor="#fcfcfc93"
+
+        value={value}
+        maxLength={maxLength}
+        secureTextEntry={secureTextEntry}
+        onChangeText={setValue}
+        keyboardType={keyboard}
+
+
       />
     </View>
   )
 }
 const styles = StyleSheet.create({
 
-    text: {
-        fontWeight: "200",
-        color: 'white'
-    },
-    
+  text: {
+    fontWeight: "200",
+    color: 'white'
+  },
+
 })

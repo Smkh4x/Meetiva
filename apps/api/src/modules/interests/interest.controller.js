@@ -1,17 +1,23 @@
-import Interest_user from "./interest.service.js";
+import interest_services from './interest.service.js'
 
-const interest = async(req, res, next) => {
+class interest_class {
 
+get_interest = async(req, res) => {
     try {
-        const { user_interests } = req.body
-        const result = await Interest_user(user_interests);
-        return res.status(200).json(result) 
-               
-    } catch (err) {
-        next(err)
+        const interests = await interest_services.get_interest();
         
-    }
-
+        return res.status(200).json({
+            success: true,
+            data: interests
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to get interests",
+        })   
+    }  
+}
 
 }
-export default interest
+
+export default new interest_class

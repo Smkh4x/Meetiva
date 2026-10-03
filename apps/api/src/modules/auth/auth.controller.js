@@ -1,3 +1,4 @@
+import { success } from "zod";
 import auth_Service from "./auth.service.js";
 
 
@@ -46,9 +47,15 @@ class register {
         }
     }
 
-    verifyUserName = async (reqBody, resBody) => {
-        await auth_Service.verifyUserName(reqBody, resBody);
+    verifyUserName = async (req, res) => {
+        const { userName } = req.body
+        await auth_Service.verifyUserName(userName);
+        return res.status(200).json({
+            success: true,
+            message: "verify success"
+        })
     }
+
 
     register = async (req , res , next) => {
         // const { email, userName, age, password, user_interests } = req.body
@@ -61,15 +68,24 @@ class register {
                 next(err)
             }        
         }
-    login = async (req, res, next) => {
+    login = async (req, res) => {
         try {
-            const user = await auth_Service.login(req.body);
+            const result = await auth_Service.login(req.body);
             
-            return res.status(200).json(user);
+            if(result.success === false){
+                return res.status(401).json({
+                    success: false,
+                    data: result
+                })
+            }
+            return res.status(200).json({
+                success: true,
+                data: result
+            });
             
         } catch (err) {
-            console.log(err.message)
-            next(err)
+            console.log(err)
+            // next(err)
             
         }
 

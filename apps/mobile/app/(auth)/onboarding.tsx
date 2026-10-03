@@ -76,7 +76,7 @@ export default function onboarding() {
             borderRadius: 10
             }}
         onpress={() => {
-            router.replace("/(auth)/login")
+            router.push("/(auth)/login")
         }}
         TextStyle={{
             color: darkColors.text.primary,

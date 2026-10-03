@@ -1,24 +1,71 @@
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { darkColors } from '@/src/theme/colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {useState } from 'react';
+import {useEffect, useState } from 'react';
 import Button from '@/src/components/ui/Button';
 import { ChevronDown,ChevronUp } from 'lucide-react-native';
+import useRegistrationStore from '@/src/store/auth.store';
+import endpoints from '@/src/services/api/services'
+import { router } from 'expo-router';
+import { ActivityIndicator } from 'react-native'
+import axios from 'axios';
 
-const interests = [
-  { id: 1, name: 'Football' },
-  { id: 2, name: 'Music' },
-  { id: 3, name: 'Gaming' },
-  { id: 4, name: 'Programming' },
-  { id: 5, name: 'Travel' },
-  { id: 6, name: 'Movies' },
-  { id: 7, name: 'Photography' },
-];
-
+interface Interests {
+  id: number;
+  interest: string;
+}
 export default function InterestsScreen() {
 
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [availableInterests, setAvailableInterests] = useState<Interests[]>([]) // from interest db 
+
+  const setUser_interests = useRegistrationStore((state) => state.setUser_interests)
+
+  const user_interests = useRegistrationStore((state) => state.user_interests) // select user
+
+  const {email, userName, age, password} = useRegistrationStore();
+  const payload = { email, userName, age: Number(age), password, user_interests}
+
+  const get_interests = async () => {
+    try {
+      const result = await endpoints.get_interests()
+      setAvailableInterests(result.data.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    get_interests();
+    console.log(payload)
+    console.log("db interests fiha => ",availableInterests) 
+  },[])
+
+    const handle_button = async () => {
+    setLoading(true)
+    try {
+
+// console.log("EMAIL:", email, typeof email);
+// console.log("USERNAME:", userName, typeof userName);
+// console.log("AGE:", age, typeof age);
+// console.log("PASSWORD:", password, typeof password);
+// console.log("INTERESTS:", user_interests, user_interests.map(id => typeof id));
+
+      const result = await endpoints.register(payload)
+      console.log(result.data)
+      router.replace('/(tabs)/discover')
+    }catch (err) {
+  if (axios.isAxiosError(err)) {
+    console.log("STATUS:", err.response?.status);
+    console.log("BACKEND RESPONSE:", err.response?.data);
+  } else {
+    console.log("ERROR:", err);
+  }
+}finally{
+      setLoading(false)
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container1}>
@@ -35,10 +82,10 @@ export default function InterestsScreen() {
         <TouchableOpacity
           activeOpacity={0.9}
           style={styles.dropdownHeader}
-          onPress={() => setIsOpen((current) => !current)}
+          onPress={() => setIsOpen((change_boolean) => !change_boolean)}
         >
-          <Text style={[styles.dropdownText, !selectedIds.length && styles.placeholderText]}>
-            {selectedIds.length > 0 ? `${selectedIds.length} selected` : 'Select your interests'}
+          <Text style={[styles.dropdownText, !user_interests.length && styles.placeholderText]}>
+            {user_interests.length >= 0 ? `${user_interests.length} selected` : 'Select your interests'}
           </Text>
 
         {!isOpen && (
@@ -52,45 +99,47 @@ export default function InterestsScreen() {
           </View>
         )}
         </TouchableOpacity>
-
         {isOpen && (
           <View style={styles.dropdownList}>
-            {interests.map((interest) => {
-              const selected = selectedIds.includes(interest.id)
+            {availableInterests.map((interest) => {
+              const selected = user_interests.includes(interest.id)
               return (
                 <TouchableOpacity
                   key={interest.id}
                   activeOpacity={0.10}
-                  onPress={() => {
+                  onPress={()=> {
                     if(!selected){
-                      setSelectedIds([...selectedIds, interest.id]);
-                      }else if(selected){
-                        setSelectedIds(
-                          selectedIds.filter((id) => id !== interest.id)
-                          )
-                        }
-                        console.log(selectedIds)
+                      setUser_interests([...user_interests, interest.id])
+                      // console.log("first select => ",interests)
+                    } else if (selected){
+                      setUser_interests(
+                        user_interests.filter((id) => id !== interest.id)
+                      )}
                   }}
                   style={[styles.optionRow]}
                 >
-                  <Text style={[styles.optionText]}>
-                    {interest.name}
-                  </Text>
-                  {selected ? <Text style={styles.checkmark}>✓</Text> : <View style={styles.unselectedDot} />}
+                <Text style={[styles.optionText]}>
+                  {interest.interest}
+                </Text>
+                {selected ? <Text style={styles.checkmark}>✓</Text> : <View style={styles.unselectedDot} />}
+
                 </TouchableOpacity>
-              );
-            })}
+              )
+          })}
           </View>
         )}
+{/* <Text>{user_interests}</Text> */}
       </View>
 
 
       <View style={styles.buttonWrapper}>
         <Button
-          text_button='Create account'
+          text_button={
+            loading? <ActivityIndicator/> : "Create account"
+          }
           containerStyle={styles.primaryButton}
           TextStyle={styles.primaryButtonText}
-          onpress={() => { }}
+          onpress={handle_button}
         />
       </View>
 

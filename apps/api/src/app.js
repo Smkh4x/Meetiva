@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/auth", auth);
-app.use("api/interests", interests)
+app.use("/api/interests", interests)
 
 // app.use((req, res, next) => {
 //     console.log("connect :", req.method, req.url)

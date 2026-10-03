@@ -6,6 +6,7 @@ import EmailVerifications from "./emailVerification.model.js";
 import jwt from 'jsonwebtoken'
 import { Op } from 'sequelize';
 import { success } from 'zod';
+import { fa } from 'zod/locales';
 
 
 const auth_Service = {
@@ -84,37 +85,46 @@ const auth_Service = {
                 }
             }
 
-            return isTrue;
+            return isTrue; //true //false
         } catch (err) {
             throw err
         }
     },
 
-    verifyUserName: async (reqBody, resBody) => {
+    verifyUserName: async (userName) => {
 
-        console.log("=> ",reqBody.body.userName)
+        console.log(" => ",userName)
         
         try {
             const existing_username = await Users.findOne({
                 where: {
-                    userName: reqBody.body.userName
+                    userName: userName
                 }
             })
             console.log("1")
 
             if(!existing_username){
-                return resBody.status(200).json({
+                return {
                     success: true
-                })
+                }
                 
             }
-            return resBody.status(401).json({
+            return {
                 success: false,
                 message: "this user already exists"
-            })
+            }
             
         } catch (err) {
             throw err
+            
+        }
+
+    },
+    interests: async (reqBody, resBody) => {
+        try {
+            const result = await findAll()
+            
+        } catch (err) {
             
         }
 
@@ -123,11 +133,8 @@ const auth_Service = {
     register: async (register_req_body) => {
 
         try {
-
-             console.log("data : ", register_req_body);
-
+        console.log("data : ", register_req_body);
         console.log("ana step 1")
-
 
         const user_existing = await Users.findOne({
             where: {
@@ -191,6 +198,7 @@ const auth_Service = {
 
         } catch (err) {
             console.log(err.message)
+            throw err
             
         }
 
@@ -204,25 +212,33 @@ const auth_Service = {
             const user_existing = await Users.findOne({
                 where: {
                     [Op.or]: [
-                        {email: login_req_body.email} || {userName: login_req_body.userName}
+                        { email: login_req_body.identifier },
+                        { userName: login_req_body.identifier }
                     ]
                 }
             })
 
+        console.log("[+]",user_existing)
             console.log("step 1")
             
             if(!user_existing){
-                if(user_existing.email !== login_req_body.email || user_existing.userName !== login_req_body.userName){
                     return {
                         success: false,
                         message: "Email or username is not correct"
                     }
-                }
+                    
             }
 
             console.log("step 2")
 
             const isTrue = await bcrypt.compare(login_req_body.password, user_existing.password);
+
+            if(!isTrue){
+                return {
+                    success: false,
+                    message: "Email or username is not correct"
+                }
+            }
 
             console.log("password: ", isTrue)
 
@@ -242,6 +258,7 @@ const auth_Service = {
 
         } catch (err) {
             console.log(err.message)
+            throw err
             
         }
 

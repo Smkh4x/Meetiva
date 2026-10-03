@@ -5,13 +5,14 @@ interface RegistrationStore {
     userName: string,
     age: number,
     password: string,
-    interests: number[],
+    user_interests: number[],
+    
 
     setEmail: (email: string) => void;
     setUserName: (userName: string) => void;
     setAge: (age: number) => void;
     setPassword: (password: string) => void;
-    setInterests: (interests: number[]) => void;
+    setUser_interests: (user_interests: number[]) => void;
 
 }
 const useRegistrationStore = create<RegistrationStore>((set) => ({
@@ -19,7 +20,7 @@ const useRegistrationStore = create<RegistrationStore>((set) => ({
     userName: "",
     age: 0,
     password: "",
-    interests: [],
+    user_interests: [],
 
     setEmail: (email) => {
         set({
@@ -33,20 +34,20 @@ const useRegistrationStore = create<RegistrationStore>((set) => ({
         })
     },
 
-    setAge: (age: number) => {
+    setAge: (age) => {
         set({
             age: age
         })
     },
 
-    setPassword: (password: string) => {
+    setPassword: (password) => {
         set({
             password: password
         })
     },
-    setInterests: (interests) => {
+    setUser_interests: (user_interests) => {
         set({
-            interests: interests
+            user_interests: user_interests
         })
     }
 
