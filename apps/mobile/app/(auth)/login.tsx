@@ -7,6 +7,7 @@ import { darkColors } from '@/src/theme/colors'
 import { router } from 'expo-router'
 import endpoints from '@/src/services/api/services'
 import axios from 'axios'
+import asyncStorage from '@/src/utils/storage'
 
 
 export default function Login() {
@@ -16,33 +17,41 @@ export default function Login() {
   const [password, setPassowrd] = useState("")
   const [error, setError] = useState("")
 
-  const payload = {identifier, password}
+
+  const payload = { identifier, password }
 
   const handle_button = async () => {
-    // console.log(payload)
+
     setError("")
     setLoading(true)
     try {
 
       const result = await endpoints.login(payload) // login identifier
-      if(!result.data){
+
+      const token = result.data;
+      console.log("result token from backend : ", token)
+
+      const result2 = await asyncStorage.store_token(token) // save token in funtion into local storage
+
+      console.log("token li tsave in db is :", result2)
+
+      if (!result.data) {
         setLoading(false)
         return;
       }
       router.replace('/(tabs)/discover')
 
-      // console.log("[+] token : ",result.data) return token
-      
     } catch (err) {
-      if(axios.isAxiosError(err)){
+
+      if (axios.isAxiosError(err)) {
         const message = err.response?.data?.data.message;
         setError(message ?? "m3rfnax had error fin hhhhhhhhhh")
       }
-      
-    }finally{
+
+    } finally {
       setLoading(false)
     }
-   
+
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -63,7 +72,7 @@ export default function Login() {
           }}
         />
         {error && (
-          <Text style={{color: "red"}}>{error}</Text>
+          <Text style={{ color: "red" }}>{error}</Text>
         )}
       </View>
 
@@ -80,11 +89,11 @@ export default function Login() {
           }}
 
         />
-                {error && (
-          <Text style={{color: "red"}}>{error}</Text>
+        {error && (
+          <Text style={{ color: "red" }}>{error}</Text>
         )}
         <Text style={styles.forgotPassword}>Forgot password?</Text>
-        
+
       </View>
 
       <Button

@@ -4,10 +4,11 @@ import Users from './modules/users/user.model.js';
 import EmailVerification from './modules/auth/emailVerification.model.js';
 import interests from './modules/interests/interest.routes.js';
 import auth from './modules/auth/auth.routes.js';
+import users from "./modules/users/user.routes.js"
 
 const app = express();
 app.use(express.json());
-
+app.use("/api/users", users)
 app.use("/api/auth", auth);
 app.use("/api/interests", interests)
 

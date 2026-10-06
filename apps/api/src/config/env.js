@@ -16,6 +16,7 @@ const env = {
 
   port: Number(process.env.PORT),
   jwtSecret: process.env.JWT_SEC,
+  jwtExpire: process.env.JWT_EXP,
 
   email: process.env.EMAIL_EMAIL,
   password: process.env.EMAIL_PASSWORD

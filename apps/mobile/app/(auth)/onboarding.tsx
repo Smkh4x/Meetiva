@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from '@/src/components/ui/Button'
 import { darkColors } from '@/src/theme/colors'
 import { router } from 'expo-router'
@@ -7,7 +7,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
+
 export default function onboarding() {
+
   return (
 <SafeAreaView style={style.conatiner}>
 

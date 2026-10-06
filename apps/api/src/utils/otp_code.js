@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import EmailVerification from '../modules/auth/emailVerification.model.js';
 

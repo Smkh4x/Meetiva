@@ -20,6 +20,7 @@
       [
         "expo-splash-screen",
         {
+          "image": "./assets/images/Meetiva-logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
@@ -34,7 +35,11 @@
       "reactCompiler": true
     },
     "android": {
-      "package": "com.anonymous.Meetiva"
+      "package": "com.anonymous.Meetiva",
+        "permissions": [
+          "android.permission.CAMERA",
+          "android.permission.RECORD_AUDIO"
+        ]
     }
   }
 }

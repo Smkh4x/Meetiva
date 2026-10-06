@@ -59,8 +59,8 @@ class endpoints {
         }
     }
     login = async (payload: object) => {
-        console.log("services => ",payload)
-        try {   
+        // console.log("services => ",payload)
+        try {
             const result = await api.post("/api/auth/login", payload);
             // console.log("[+]",result.data)
             return result.data
@@ -68,6 +68,14 @@ class endpoints {
         } catch (err:any) {
             throw err
             
+        }
+    }
+    me = async (token: string) => {
+        try {
+            const result = await api.post("/api/users/me", token)
+            return result.data;
+        } catch (err) {
+            throw err
         }
 
     }

@@ -1,21 +1,24 @@
 import user_Service from "./user.service.js";
 
-const getMe = async(req, res, next) => {
-    try {
+class user_controller {
+    me = async (req, res) => {
+        console.log("in controller req.user :", req.user)
+        try {
+            const result = await user_Service.get_me(req.user)
 
-        const user = await user_Service.getMe(req.user.id);
+            return res.status(200).json({
+                success: true,
+                data: result.id
+            })
+            
+        } catch (err) {
+            console.log("controller error in :", err)   
+            throw err
 
-        return res.status(200).json({
-            success: true,
-            data: user // user token {id...}
-        })
+        }
 
-    } catch (err) {
-        console.log(err.message)
-        next(err)
-        
+
     }
 
 }
-
-export default getMe;
+export default new user_controller()

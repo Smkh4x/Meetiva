@@ -5,8 +5,8 @@ import email_service from "./email_service.js";
 import EmailVerifications from "./emailVerification.model.js";
 import jwt from 'jsonwebtoken'
 import { Op } from 'sequelize';
-import { success } from 'zod';
-import { fa } from 'zod/locales';
+import env from '../../config/env.js';
+
 
 
 const auth_Service = {
@@ -246,12 +246,13 @@ const auth_Service = {
                 {
                     id: user_existing.id
                 },
-                process.env.JWT_SEC,
+                env.jwtSecret,
                 {
-                    expiresIn: process.env.JWT_EXP
+                    expiresIn: env.jwtExpire
                 }
     
             )
+
             console.log(user_Token);
 
             return user_Token;

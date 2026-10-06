@@ -1,36 +1,27 @@
+import jwt from "jsonwebtoken";
+import env from "../../config/env.js";
 import Users from "./user.model.js";
 
 const user_Service = {
+    get_me: async(reqUser) => {
+        console.log("1 => here in serveices : ",reqUser)
 
-    getMe: async (me_req_body) => {
-        try {
-            console.log("ID", me_req_body)
-
-        const user = await Users.findByPk(me_req_body.id, {
+        const result = await Users.findByPk(reqUser.id, {
             attributes: {
                 exclude: ["password"]
             }
-        });// id in parametre
-
-        if(!user){
-            throw new Error("User not found");
-        } 
-
-        console.log("step success")
-        console.log({
-            message: "user:",
-            user
         })
-        return user;
-            
-        } catch (err) {
-            console.log(err.message)
-            
+
+        if(!result){
+            return {
+                success: false,
+                message: "user not found"
+            }
         }
-
-
-     
+        return {
+            success: true,
+            message: "this is user data :", result
+        }
     }
-
 }
 export default user_Service;

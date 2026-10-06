@@ -1,49 +1,37 @@
 import jwt from "jsonwebtoken";
+import env from "../../config/env.js";
 
 const user_validator = async (req, res, next) => {
+        const auth_header = req.headers.authorization // auth_header
+        console.log("=> ",auth_header)
+            if(!auth_header) return { // if not tokne return false and messsage Authorization required
+                success: false ,
+                message: "Authorization required"
+            }    
+        const token = auth_header?.split(" ")[1];
+        console.log("2 step",token)
     try {
-
-        const auth_header = req.Headers.authorization; // auth_header
-
-        if(!auth_header) return { // if not tokne return false and messsage Authorization required
-            success: false ,
-            message: "Authorization required"
-        }
-
-        const verify_token = jwt.verify(
-            auth_header,
-            process.env.JWT_SEC
+        console.log("here 1")
+        const decode = jwt.verify(
+            token,
+            env.jwtSecret
         )
+        console.log("here 2 ===============>")
 
-        const user_id = verify_token;
+        req.user = decode; // store data token in user_id
 
-        console.log("user information after login in the app :", user_id)
-
+        console.log(req.user)
         next()
- // return pyload verifyd
-
     } catch (err) {
+    console.error("=> JWT ERROR:", err);
 
-        return res.status(401).json({
-            message: "Invalid token"
-        });
-
-        
-    }
-
-
-
-
-    
-
+    return res.status(401).json({
+        success: false,
+        message: "Invalid or expired token",
+    });
+}
 }
 export default user_validator
-
-// req = {
-//     headers: {
-//         authorization: "Bearer eyJhbGciOi..."
-//     }
-// }
 
 // "Invalid or expired token"
 // "Authorization required"
