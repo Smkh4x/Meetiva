@@ -65,7 +65,7 @@ class endpoints {
             // console.log("[+]",result.data)
             return result.data
             
-        } catch (err:any) {
+        } catch (err) {
             throw err
             
         }
@@ -78,6 +78,19 @@ class endpoints {
             throw err
         }
 
+    }
+    user_profile = async () => {
+        try {
+            const result = await api.get("/api/users/profile")
+            console.log("all result of profile => ",result)
+            return result.data
+            
+        } catch (err:any) {
+            console.log("response =>",err.response?.data)
+            console.log("status => ",err.status?.data)
+            throw err
+            
+        }
     }
 }
 export default new endpoints()

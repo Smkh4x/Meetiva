@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import EmailVerification from '../modules/auth/emailVerification.model.js';
+import crypto from "crypto";
 
 async function OTP_code (email) {
 

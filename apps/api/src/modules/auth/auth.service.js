@@ -6,6 +6,7 @@ import EmailVerifications from "./emailVerification.model.js";
 import jwt from 'jsonwebtoken'
 import { Op } from 'sequelize';
 import env from '../../config/env.js';
+import Assosiation_User_And_Interests from '../associations/assosiation.model.js';
 
 
 
@@ -33,6 +34,7 @@ const auth_Service = {
                     message: "Email already exits"
                 };
             }
+
             const generated_code = await OTP_code(email.email);
 
             console.log("generated success : ",generated_code);
@@ -179,10 +181,30 @@ const auth_Service = {
             userName: register_req_body.userName,
             age: register_req_body.age,
             password: pass_Hash,
-            user_interests: register_req_body.user_interests,
+            user_interests: register_req_body.user_interests, // array [1, 3, 4]
         })
+        /*
+        here take a array interests like a user_interests = [4,3,1]
+        map in array take first id create assosioation lik a : 
+        
+        userId: 1       |        interestId: 1
+        userId: 1       |        interestId: 3
+        userId: 1       |        interestId: 4
+        
+        so thats goood
+        */
+        const userInterests = register_req_body.user_interests.map((interestId) => ({
+            userId: new_User.id,
+            interestId: interestId
 
-        console.log("user created :", new_User)
+        }))
+        console.log(userInterests)
+
+         console.log("user created :", new_User)
+
+        await Assosiation_User_And_Interests.bulkCreate(userInterests)
+
+        console.log("assosiation created :", userInterests)
 
         const auth_Token = jwt.sign({
             id: new_User.id

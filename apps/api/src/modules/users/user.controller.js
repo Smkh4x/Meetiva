@@ -1,3 +1,5 @@
+import Assosiation_User_And_Interests from "../associations/assosiation.model.js";
+import Users from "./user.model.js";
 import user_Service from "./user.service.js";
 
 class user_controller {
@@ -18,6 +20,19 @@ class user_controller {
         }
 
 
+    }
+
+    profile = async (req, res) => {
+        console.log("token success and is done in controller :",req.user.id)
+        try {
+            const result = await Users.findByPk(req.user.id);
+            return res.status(200).json({
+                data: result
+            })
+        } catch (err) {
+            console.log(err)
+            
+        }
     }
 
 }

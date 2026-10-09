@@ -7,4 +7,6 @@ const router = express.Router()
 
 router.post("/me",user_validator, user_controller.me);
 
+// router.get("/getall",user_validator, user_controller); // test get all
+
 export default router

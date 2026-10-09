@@ -26,8 +26,10 @@
     "expo-dev-client": "^57.0.19",
     "nodemailer": "^10.0.10",
     "prebuild": "^13.0.1",
+    "react-native-reanimated": "^4.7.1",
     "react-native-safe-area-context": "^5.9.1",
     "react-native-webrtc": "^124.0.8",
+    "socket.io-client": "^4.8.4",
     "zod": "^4.6.5"
   },
   "devDependencies": {

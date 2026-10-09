@@ -3,24 +3,26 @@ import env from "../../config/env.js";
 
 const user_validator = async (req, res, next) => {
         const auth_header = req.headers.authorization // auth_header
-        console.log("=> ",auth_header)
+        // console.log("=> ",auth_header)
             if(!auth_header) return { // if not tokne return false and messsage Authorization required
                 success: false ,
                 message: "Authorization required"
             }    
         const token = auth_header?.split(" ")[1];
-        console.log("2 step",token)
+
     try {
-        console.log("here 1")
+        // console.log("here 1")
+
         const decode = jwt.verify(
             token,
             env.jwtSecret
         )
-        console.log("here 2 ===============>")
+
+        // console.log("here 2 ===============>")
 
         req.user = decode; // store data token in user_id
 
-        console.log(req.user)
+        // console.log(req.user)
         next()
     } catch (err) {
     console.error("=> JWT ERROR:", err);

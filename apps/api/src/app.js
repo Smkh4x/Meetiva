@@ -2,11 +2,16 @@ import express from 'express';
 import database from './config/database.js';
 import Users from './modules/users/user.model.js';
 import EmailVerification from './modules/auth/emailVerification.model.js';
+import './modules/associations/assosiation.js';
 import interests from './modules/interests/interest.routes.js';
 import auth from './modules/auth/auth.routes.js';
 import users from "./modules/users/user.routes.js"
 
-const app = express();
+const app = express(); // express applicatio
+
+
+
+
 app.use(express.json());
 app.use("/api/users", users)
 app.use("/api/auth", auth);
@@ -23,7 +28,9 @@ try {
     await database.authenticate();
     console.log('[+] => Database connection has been established successfully.');
 
-    await database.sync();
+    await database.sync({
+        alter: true
+    });
 
     console.log("tables created successfully");
 

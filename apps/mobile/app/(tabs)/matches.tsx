@@ -6,12 +6,15 @@ import { CameraControlButton, MicrophoneControlButton } from '../../src/componen
 import { darkColors } from '../../src/theme/colors'
 import { mediaDevices, MediaStream, RTCView } from 'react-native-webrtc'
 import { useEffect, useState } from 'react'
+import { router } from 'expo-router'
+import { connect_Socket, socket } from '@/src/services/socket/socket'
 
 
 export default function Matches() {
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [mic, setMic] = useState(true)
   const [camera, setCamera] = useState(true)
+
 
   useEffect(() => {
     const start_Camera = async () => {
@@ -20,14 +23,23 @@ export default function Matches() {
           video: true,
           audio: true
         })
-            setStream(camera_data)
+        setStream(camera_data)
+
+          socket.on("connect", () => {
+              console.log("your id socket", socket.id)
+          })
+          await connect_Socket()
+
+          socket.on("matching:matched", (data) => {
+              console.log(data);
+          });
+          
       } catch (error) {
         console.warn('Camera or microphone access is unavailable', error)
       }
     }
     start_Camera()
   }, [])
-
 
   return (
     <View style={styles.screen}>
@@ -61,12 +73,19 @@ export default function Matches() {
               accessibilityLabel="Log out"
               accessibilityRole="button"
               style={styles.exitButton}
+              onPress={() => {
+                router.back()
+              }}
             >
               <LogOut color={darkColors.primary} size={22} strokeWidth={2.6} />
             </TouchableOpacity>
           </View>
           <View style={styles.matchPrompt}>
-            <Text style={styles.promptText}>Swipe right to start matching</Text>
+            <TouchableOpacity onPress={() => {
+                       console.log("your socket id :",socket.id)
+                       socket.emit("matching:start")
+                       console.log("event send")
+            }}><Text style={styles.promptText}>Swipe right to start matching</Text></TouchableOpacity>
           </View>
 
           <View
@@ -83,7 +102,7 @@ export default function Matches() {
               />
               )}
 
-                          {stream && (
+                {stream && (
             <RTCView
               streamURL={stream.toURL()}
               style={{

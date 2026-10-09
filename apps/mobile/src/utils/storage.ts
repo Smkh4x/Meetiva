@@ -7,6 +7,7 @@ class asyncStorage {
 
     get_token = async () => {
         const result = await AsyncStorage.getItem("token")
+        console.log("result storage =>",result)
         return result;
     }
 }
