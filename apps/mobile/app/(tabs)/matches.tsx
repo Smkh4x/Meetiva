@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { LogOut } from 'lucide-react-native'
+import { LogOut, ToyBrick } from 'lucide-react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { CameraControlButton, MicrophoneControlButton } from '../../src/components/ui/MediaControlButtons'
 import { darkColors } from '../../src/theme/colors'
@@ -8,15 +8,23 @@ import { mediaDevices, MediaStream, RTCView } from 'react-native-webrtc'
 import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { connect_Socket, socket } from '@/src/services/socket/socket'
-
+import MatchingSwipe from '../video-call/MatchingSwipe'
+import endpoints from '@/src/services/api/services'
 
 export default function Matches() {
-  const [stream, setStream] = useState<MediaStream | null>(null)
-  const [mic, setMic] = useState(true)
-  const [camera, setCamera] = useState(true)
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [mic, setMic] = useState(true);
+  const [camera, setCamera] = useState(true);
+
+  const [name, setName] = useState("")
 
 
   useEffect(() => {
+    const get_profile = async () => {
+      const profile = await endpoints.me();
+      setName(profile.data.data.userName)
+      // console.log(profile.data.data.userName)
+    }
     const start_Camera = async () => {
       try {
         const camera_data = await mediaDevices.getUserMedia({
@@ -24,20 +32,20 @@ export default function Matches() {
           audio: true
         })
         setStream(camera_data)
-
           socket.on("connect", () => {
               console.log("your id socket", socket.id)
           })
           await connect_Socket()
 
-          socket.on("matching:matched", (data) => {
-              console.log(data);
-          });
+          // socket.on("matching:matched", (data) => {
+          //     console.log("data",data);
+          // });
           
       } catch (error) {
         console.warn('Camera or microphone access is unavailable', error)
       }
     }
+    get_profile()
     start_Camera()
   }, [])
 
@@ -63,10 +71,10 @@ export default function Matches() {
                 <Text style={styles.avatarInitialText}>K</Text>
               </View>
               <View>
-                <Text style={styles.headerUsername}>Khaled</Text>
-                <View style={styles.userIdBadge}>
+                <Text style={styles.headerUsername}>{name}</Text>
+                {/* <View style={styles.userIdBadge}>
                   <Text style={styles.userId}>ID 8F42-19B</Text>
-                </View>
+                </View> */}
               </View>
             </View>
             <TouchableOpacity
@@ -81,11 +89,12 @@ export default function Matches() {
             </TouchableOpacity>
           </View>
           <View style={styles.matchPrompt}>
-            <TouchableOpacity onPress={() => {
+            {/* <TouchableOpacity onPress={() => {
                        console.log("your socket id :",socket.id)
                        socket.emit("matching:start")
                        console.log("event send")
-            }}><Text style={styles.promptText}>Swipe right to start matching</Text></TouchableOpacity>
+            }}><Text style={styles.promptText}>Swipe right to start matching</Text></TouchableOpacity> */}
+            <MatchingSwipe />
           </View>
 
           <View
@@ -247,15 +256,16 @@ const styles = StyleSheet.create({
     height: 260,
   },
   matchPrompt: {
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    transform: [{ translateY: -22 }],
+    flex: 1,
+    // position: 'absolute',
+    top: '-20%',
+    // left: 0,
+    // right: 0,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // paddingHorizontal: 20,
+    // paddingVertical: 12,
+    // transform: [{ translateY: -22 }],
   },
   promptText: {
     color: darkColors.text.secondary,

@@ -20,7 +20,8 @@ const user_Service = {
         }
         return {
             success: true,
-            message: "this is user data :", result
+            message: "this is user data :",
+            data: result
         }
     }
 }

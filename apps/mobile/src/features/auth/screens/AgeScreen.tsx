@@ -5,7 +5,7 @@ import Input from '@/src/components/ui/Input'
 import Button from '@/src/components/ui/Button'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { number, z } from 'zod'
+import { z } from 'zod'
 import useRegistrationStore from '@/src/store/auth.store'
 
 const shemaAge = z

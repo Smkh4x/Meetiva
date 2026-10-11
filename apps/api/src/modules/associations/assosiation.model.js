@@ -11,7 +11,7 @@ const Assosiation_User_And_Interests = database.define("assosiation_User_And_Int
       autoIncrement: true,
       
     },
-    userId: {
+    userId: {//1
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -20,7 +20,7 @@ const Assosiation_User_And_Interests = database.define("assosiation_User_And_Int
         }
 
     },
-    interestId: {
+    interestId: {//3
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

@@ -15,6 +15,7 @@ const shemaPassword = z
   .max(100, "Password must be less than 100 characters");
 
 export default function PasswordScreen() {
+  
   const password = useRegistrationStore((state) => state.password)
   const setPassword = useRegistrationStore((state) => state.setPassword)
   const [error, setError] = useState("")

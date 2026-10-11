@@ -14,7 +14,8 @@ class MatchingService {
                     this.waittingUsers.push({
                     socketId: socket_id,
                     userId: user_id,
-                    interests: interests.user_interests
+                    interests: interests.user_interests,
+                    username: interests.userName
                 })
                 console.log("before ======> ",this.waittingUsers)
                 return null;
@@ -27,7 +28,8 @@ class MatchingService {
                     this.waittingUsers.push({
                     socketId: socket_id,
                     userId: user_id,
-                    interests: interests.user_interests
+                    interests: interests.user_interests,
+                    username: interests.userName
                 })
                 console.log(this.waittingUsers)
                 console.log("ana 3wdt drt lk push");
@@ -67,12 +69,13 @@ class MatchingService {
                 this.waittingUsers.push({
                 socketId: socket_id,
                 userId: user_id,
-                interests: interests.user_interests
+                interests: interests.user_interests,
+                username: interests.userName
             })
             console.log("add data user in waiting because not found any one for matching")
         }
         console.log("after =====>",this.waittingUsers)
-
+        console.log("9bl return => ",matchedUser)
         return matchedUser;
 
         

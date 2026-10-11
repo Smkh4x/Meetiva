@@ -21,6 +21,7 @@ const userNameShema = z
   });
 
 export default function UsernameScreen() {
+  
   const userName = useRegistrationStore((state) => state.userName);
   const setUserName = useRegistrationStore((state) => state.setUserName);
   const [error, setError] = useState("")

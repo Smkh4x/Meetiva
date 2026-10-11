@@ -9,7 +9,11 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.Meetiva"
+      "bundleIdentifier": "com.anonymous.Meetiva",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Meetiva uses your microphone for one-to-one video calls.",
+        "NSCameraUsageDescription": "Meetiva uses your camera for one-to-one video calls."
+    }
     },
     "web": {
       "output": "static",

@@ -10,13 +10,18 @@ class MatchingSocket {
 
   register() {
     this.io.on("connection", (socket) => {
-      // console.log("your socket ID:", socket.userId, socket.id);
+      console.log("your socket ID:", socket.id, "and id user", socket.userId);
 
       socket.on("matching:start", async () => {
+
         const matchedUser = await matchingService.startMatching(
           socket.id,
           socket.userId
         );
+
+        console.log("Matched user:", matchedUser)
+
+        console.log("dsfefsf",matchedUser)
 
         if (matchedUser) {
           const roomID = crypto.randomUUID();
@@ -29,18 +34,33 @@ class MatchingSocket {
 
           matched_socket.join(roomID);
 
-          const room = await this.io.sockets.adapter.rooms.get(roomID);
+        // console.log("Room:", roomID);
+        // console.log("User A:", {
+        //   socketId: socket.id,
+        //   userId: socket.userId,
+        //   username: socket.username,
+        // });
 
-          console.log("room:", [...room]);
+        // console.log("User B:", {
+        //   socketId: matched_socket.id,
+        //   userId: matched_socket.userId,
+        //   username: matchedUser.username,
+        // });
 
           socket.emit("matching:matched", {
             roomId: roomID,
+            socketId: matched_socket.userId,
+            userId: matched_socket.userId,
+            username: matchedUser.username
+          });
+          matched_socket.emit("matching:matched", {
+            roomId: roomID,
+            socketID: socket.socketId,
             userId: socket.userId,
+            username: socket.username
           });
-          socket.emit("matching:matched", {
-            roomId: roomID,
-            userID: matchedUser.socketId,
-          });
+
+          console.log("all done")
         }
       });
     });

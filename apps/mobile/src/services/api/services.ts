@@ -70,27 +70,29 @@ class endpoints {
             
         }
     }
-    me = async (token: string) => {
+    me = async (token?: string) => {
         try {
             const result = await api.post("/api/users/me", token)
+            // console.log("me",result.data.data.data.userName)
             return result.data;
         } catch (err) {
+            console.log(err)
             throw err
         }
 
     }
-    user_profile = async () => {
-        try {
-            const result = await api.get("/api/users/profile")
-            console.log("all result of profile => ",result)
-            return result.data
+    // user_profile = async () => {
+    //     try {
+    //         const result = await api.get("/api/users/profile")
+    //         console.log("all result of profile => ",result)
+    //         return result.data
             
-        } catch (err:any) {
-            console.log("response =>",err.response?.data)
-            console.log("status => ",err.status?.data)
-            throw err
+    //     } catch (err:any) {
+    //         console.log("response =>",err.response?.data)
+    //         console.log("status => ",err.status?.data)
+    //         throw err
             
-        }
-    }
+    //     }
+    // }
 }
 export default new endpoints()
