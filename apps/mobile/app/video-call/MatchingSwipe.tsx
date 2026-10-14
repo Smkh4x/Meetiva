@@ -35,6 +35,7 @@ export type MatchData = {
 
 type Props = {
   inMatching: (data: MatchData) => void;
+  // onSwipeNext: () => void;
 }
 
 export default function MatchingSwipe({inMatching}: Props) {
@@ -63,11 +64,11 @@ useEffect(() => {
     setMatchedUser(data.username); // set some thing
     setIsSearching(false);
 
-        console.log('[MATCH EVENT RECEIVED]', {
-      roomId: data.roomId,
-      role: data.role,
-      username: data.username,
-    });
+    //     console.log('[MATCH EVENT RECEIVED]', {
+    //   roomId: data.roomId,
+    //   role: data.role,
+    //   username: data.username,
+    // });
 
   };
 
@@ -135,7 +136,7 @@ else if(translateX.value >= swap_left){
   return (
     <GestureDetector gesture={fingerTracker}>
       <Animated.View style={[styles.card, cardStyle]}>
-        <LinearGradient
+        {/* <LinearGradient
             colors={['rgba(7, 28, 42, 0.84)', 'rgba(7, 28, 42, 0.18)', 'transparent']}
             locations={[0, 0.55, 1]}
             style={styles.topShade}
@@ -146,11 +147,12 @@ else if(translateX.value >= swap_left){
             locations={[0, 0.38, 1]}
             style={styles.bottomShade}
             pointerEvents="none"
-          /> 
-          {!hasStarted ? (<Text>Swipe right to start chatting</Text> )
-                       : isSearching 
-                       ? <ActivityIndicator color={'white'} size={50}/>
-                       : (<Text>{matchedUser}</Text> )
+          />  */}
+    {!hasStarted 
+        ? (<Text>Swipe right to start chatting</Text> )
+        : isSearching 
+        ? <ActivityIndicator color={'white'} size={50}/>
+        : (<Text>{matchedUser}</Text> )
     }
       </Animated.View>      
     </GestureDetector>
@@ -161,13 +163,14 @@ else if(translateX.value >= swap_left){
 const styles = StyleSheet.create({
   card: {
     width: '100%',
-    height: '140%',
+    height: '92%',
     overflow: "hidden",
-    backgroundColor: '#168FEA',
+    // backgroundColor: '#168FEA',
+    // backgroundColor: '#219c58',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: -1,
-    top: -30
+    top: 160
   },
   topShade: {
     position: 'absolute',

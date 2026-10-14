@@ -25,9 +25,190 @@ export default function Matches() {
   const [camera, setCamera] = useState(true);
   const [name, setName] = useState("")
   // const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const peerConnection = useRef<RTCPeerConnection | null>(null);
   const [matchdata, setMatchData] = useState<MatchData | null>(null)
+  const [loadcamera, setLoadCamera] = useState(true)
+
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+
 
 // console.log("[+]test if match data jat f prop mn card => ",matchdata)
+useEffect(() => {
+  if (!matchdata || !stream) return;
+
+  const pc_user = new RTCPeerConnection({
+    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+  });
+  peerConnection.current = pc_user;
+
+  const pendingCandidates: RTCIceCandidateInit[] = [];
+  let remoteDescSet = false;
+
+  stream.getTracks().forEach((track) => {
+    pc_user.addTrack(track, stream);
+  });
+
+  pc_user.onicecandidate = (event: any) => {
+    if (!event.candidate) return;
+    socket.emit("webrtc:ice-candidate", {
+      roomId: matchdata.roomId,
+      candidate: event.candidate.toJSON(),
+    });
+  };
+
+  pc_user.ontrack = (event: any) => {
+    const [stream0] = event.streams;
+    if (stream0) setRemoteStream(stream0);
+  };
+
+  const flushPending = async () => {
+    while (pendingCandidates.length) {
+      const c = pendingCandidates.shift()!;
+      try {
+        await pc_user.addIceCandidate(new RTCIceCandidate(c));
+      } catch (err) {
+        console.warn("addIceCandidate (pending) failed", err);
+      }
+    }
+  };
+
+  // ghadi nsifto offer
+  const handlePeerReady = async (data: { roomId: string; fromSocketId: string }) => {
+    if (data.roomId !== matchdata.roomId || data.fromSocketId !== matchdata.socketId) return;
+    try {
+      const offer = await pc_user.createOffer({});
+      await pc_user.setLocalDescription(offer);
+      socket.emit("webrtc:offer", { roomId: matchdata.roomId, offer });
+    } catch (err) {
+      console.warn("createOffer failed", err);
+    }
+  };
+
+  // jatna offer -> n-jawbo b answer
+  const handleOffer = async (data: { roomId: string; offer: any; fromSocketId: string }) => {
+    try {
+      await pc_user.setRemoteDescription(new RTCSessionDescription(data.offer));
+      remoteDescSet = true;
+      await flushPending();
+
+      const answer = await pc_user.createAnswer();
+      await pc_user.setLocalDescription(answer);
+      socket.emit("webrtc:answer", { roomId: matchdata.roomId, answer });
+    } catch (err) {
+      console.warn("handleOffer failed", err);
+    }
+  };
+
+  // jatna answer
+  const handleAnswer = async (data: { roomId: string; answer: any; fromSocketId: string }) => {
+    try {
+      await pc_user.setRemoteDescription(new RTCSessionDescription(data.answer));
+      remoteDescSet = true;
+      await flushPending();
+    } catch (err) {
+      console.warn("handleAnswer failed", err);
+    }
+  };
+
+  // jatna ICE candidate
+  const handleIceCandidate = async (data: { roomId: string; candidate: any; fromSocketId: string }) => {
+    if (!remoteDescSet) {
+      pendingCandidates.push(data.candidate);
+      return;
+    }
+    try {
+      await pc_user.addIceCandidate(new RTCIceCandidate(data.candidate));
+    } catch (err) {
+      console.warn("addIceCandidate failed", err);
+    }
+  };
+
+  socket.on("webrtc:peer-ready", handlePeerReady);
+  socket.on("webrtc:offer", handleOffer);
+  socket.on("webrtc:answer", handleAnswer);
+  socket.on("webrtc:ice-candidate", handleIceCandidate);
+
+  socket.emit("webrtc:ready", { roomId: matchdata.roomId });
+
+  return () => {
+    socket.off("webrtc:peer-ready", handlePeerReady);
+    socket.off("webrtc:offer", handleOffer);
+    socket.off("webrtc:answer", handleAnswer);
+    socket.off("webrtc:ice-candidate", handleIceCandidate);
+
+    pc_user.close();
+    setRemoteStream(null);
+
+    if (peerConnection.current === pc_user) {
+      peerConnection.current = null;
+    }
+  };
+}, [stream, matchdata]);
+//   useEffect(() => {
+//     if(!matchdata || !stream) return;
+
+//     const pc_user = new RTCPeerConnection({
+//       iceServers: [
+//         {
+//           url: 'stun:stun.l.google.com:19302' // stun server configuration
+//         }
+//       ]
+//     })
+//     peerConnection.current = pc_user;
+
+//   const pendingCandidates: RTCIceCandidateInit[] = []; // save conditate mo2a9atan
+//   let remoteDescSet = false; // 
+
+//     stream.getTracks().forEach((track) => {
+//       pc_user.addTrack(track, stream)
+//     })
+
+//     pc_user.onicecandidate = (event:any) => {
+//   if (!event.candidate) return;
+
+//   socket.emit("webrtc:ice-candidate", {
+//     roomId: matchdata.roomId,
+//     candidate: event.candidate.toJSON(),
+//   });
+//   };
+
+//   pc_user.ontrack = (event:any) => {
+//   const [remoteStream] = event.streams;
+
+//   if (remoteStream && remoteVideoRef.current) {
+//     remoteVideoRef.current.srcObject = remoteStream;
+//   }
+// };
+
+//     const handlePeerReady = (data: {
+//       roomId: string;
+//       fromSocketId: string;
+//     }) => {
+//       if(data.roomId !== matchdata.roomId || data.fromSocketId !== matchdata.socketId) return
+//     } 
+
+//   socket.on("webrtc:peer-ready", handlePeerReady);
+//   socket.on("webrtc:offer", handleOffer);
+//   socket.on("webrtc:answer", handleAnswer);
+//   socket.on("webrtc:ice-candidate", handleIceCandidate);
+
+//     socket.emit("webrtc:ready", {
+//     roomId: matchdata.roomId,
+//   });
+
+//   return () => {
+//     socket.off("webrtc:peer-ready", handlePeerReady);
+//     socket.off("webrtc:offer", handleOffer);
+//     socket.off("webrtc:answer", handleAnswer);
+//     socket.off("webrtc:ice-candidate", handleIceCandidate);
+
+//     pc_user.close();
+
+//     if(peerConnection.current === pc_user){
+//       peerConnection.current === null;
+//     }
+//   }
+//   },[stream,matchdata])
 
   useEffect(() => {
     const get_profile = async () => {
@@ -69,6 +250,27 @@ export default function Matches() {
 
   return (
     <View style={styles.screen}>
+
+      <View style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            zIndex: 0,
+            backgroundColor: 'grey',
+      }}>
+        <View style={{flex: 1, justifyContent: "center", alignItems: 'center'}}>
+        {remoteStream && (
+          <RTCView
+            streamURL={remoteStream.toURL()}
+            style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 0 }}
+            objectFit="cover"
+            mirror={true}
+          />
+        )}   
+        </View>
+      </View>
+
+
 
         <LinearGradient
           colors={['rgba(7, 28, 42, 0.84)', 'rgba(7, 28, 42, 0.18)', 'transparent']}

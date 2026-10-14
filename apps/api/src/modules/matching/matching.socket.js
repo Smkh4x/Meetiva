@@ -44,35 +44,45 @@ class MatchingSocket {
             socketId: matched_socket.id,
             userId: matched_socket.userId,
             username: matchedUser.username,
-            role: "send-offer"
+            role: "answer-offer"
           });
           matched_socket.emit("matching:matched", {
             roomId: roomId,
             socketId: socket.id,
             userId: socket.userId,
             username: userA.userName,
-            role: "answer-offer"
+            role: "send-offer"
           });
           console.log("rooId",roomId)
           console.log("all done")
         }
       });
+      socket.on("webrtc:ready", ({roomId}) => {
+        if (!roomId || !socket.rooms.has(roomId)) return;
+          socket.to(roomId).emit("webrtc:peer-ready", {
+          roomId,
+          fromSocketId: socket.id,
+        });
+      })
+
       socket.on("webrtc:offer", ({roomId, offer}) => {
-        if(!socket.rooms.has(roomId) || !offer) return
+        if(!socket.rooms.has(roomId) || !offer) return;
         socket.to(roomId).emit("webrtc:offer", {
           offer,
           fromSocketId: socket.id
         })
       })
+
       socket.on("webrtc:answer", ({roomId, answer}) => {
-        if(!socket.rooms.has(roomId) || !answer) return
+        if(!socket.rooms.has(roomId) || !answer) return;
         socket.to(roomId).emit("webrtc:answer", {
           answer,
           fromSocketId: socket.id
         })
       })
+      
       socket.on("webrtc:ice-candidate", ({roomId, candidate}) => {
-        if(!socket.rooms.has(roomId) || !candidate) return
+        if(!socket.rooms.has(roomId) || !candidate) return;
         socket.to(roomId).emit("webrtc:ice-candidate", {
           candidate,
           fromSocketId: socket.id

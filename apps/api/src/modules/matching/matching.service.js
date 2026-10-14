@@ -14,7 +14,7 @@ class MatchingService {
                     this.waittingUsers.push({
                     socketId: socket_id,
                     userId: user_id,
-                    interests: interests.user_interests,
+                    interests: interests.user_interests, // []
                     username: interests.userName
                 })
                 // console.log("before ======> ",this.waittingUsers)
