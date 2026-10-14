@@ -1,3 +1,4 @@
+import { success } from "zod";
 import Assosiation_User_And_Interests from "../associations/assosiation.model.js";
 import Users from "./user.model.js";
 import user_Service from "./user.service.js";
@@ -15,7 +16,11 @@ class user_controller {
             
         } catch (err) {
             console.log("controller error in :", err)   
-            throw err
+            return res.status(500).json({
+                success: false,
+                message: 'err in server'
+            })
+
 
         }
 

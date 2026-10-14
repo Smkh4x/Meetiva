@@ -14,16 +14,22 @@ export default function index() {
     const waiting = async () => {
 
     const token = await asyncStorage.get_token()
+    // console.log("im here in index screen")
       try {
         if(!token){
           router.push('/(auth)/onboarding');
           return;
         }
+        // console.log("index: step 1")
         if(token) {
 
           await new Promise(resolve => setTimeout(resolve, 2000));
 
+          // console.log("index: step 2")
+
             const result = await endpoints.me(token);
+
+            // console.log("index: step 3")
 
               if(result.success){
                 router.replace('/(tabs)/discover')
@@ -34,12 +40,12 @@ export default function index() {
 
             if(axios.isAxiosError(err)){
 
-              const message = err.response?.data?.message;
+              const message = err.response?.data;
 
               if(message === "Invalid or expired token")  {
                 router.push('/(auth)/login')
               }
-                console.log(message)
+                console.log("[-] 001",message)
             }
         }
   }

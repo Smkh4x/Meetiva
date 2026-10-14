@@ -18,7 +18,7 @@ function matching_auth_middelware(socket, next) {
         
         socket.userId = decode.id
 
-        console.log("=> ",socket.userId)
+        console.log("middelware => ",socket.userId)
 
         next()      
     } catch (err) {

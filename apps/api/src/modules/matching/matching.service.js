@@ -4,7 +4,7 @@ class MatchingService {
 
 
     constructor() {
-        this.waittingUsers = [] // here
+        this.waittingUsers = [] // here waiting users 
     }
     async startMatching (socket_id, user_id) {
 
@@ -17,7 +17,7 @@ class MatchingService {
                     interests: interests.user_interests,
                     username: interests.userName
                 })
-                console.log("before ======> ",this.waittingUsers)
+                // console.log("before ======> ",this.waittingUsers)
                 return null;
         }
         const check_waiting = this.waittingUsers.some((waitingUser) => waitingUser.userId === user_id)
@@ -74,8 +74,8 @@ class MatchingService {
             })
             console.log("add data user in waiting because not found any one for matching")
         }
-        console.log("after =====>",this.waittingUsers)
-        console.log("9bl return => ",matchedUser)
+        // console.log("after =====>",this.waittingUsers)
+        // console.log("9bl return => ",matchedUser)
         return matchedUser;
 
         

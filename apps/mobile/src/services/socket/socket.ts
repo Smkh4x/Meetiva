@@ -10,7 +10,7 @@ export const socket = io(url, {
 
 export const connect_Socket = async () => {
     const TOKEN = await asyncStorage.get_token();
-    console.log("token in socket ",TOKEN)
+    // console.log("token in socket ",TOKEN)
 
     socket.auth = {
         token: TOKEN ?? ""

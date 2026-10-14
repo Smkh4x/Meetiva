@@ -1,56 +1,75 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { LogOut, ToyBrick } from 'lucide-react-native'
+import { LogOut } from 'lucide-react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { CameraControlButton, MicrophoneControlButton } from '../../src/components/ui/MediaControlButtons'
 import { darkColors } from '../../src/theme/colors'
-import { mediaDevices, MediaStream, RTCView } from 'react-native-webrtc'
-import { useEffect, useState } from 'react'
+import { mediaDevices,
+  MediaStream,
+  RTCView,
+  RTCPeerConnection,
+  RTCIceCandidate,
+  RTCSessionDescription
+} from 'react-native-webrtc'
+import { useEffect, useState, useRef } from 'react'
 import { router } from 'expo-router'
 import { connect_Socket, socket } from '@/src/services/socket/socket'
-import MatchingSwipe from '../video-call/MatchingSwipe'
+import MatchingSwipe, {type MatchData} from '../video-call/MatchingSwipe'
 import endpoints from '@/src/services/api/services'
 
+
 export default function Matches() {
+
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [mic, setMic] = useState(true);
   const [camera, setCamera] = useState(true);
-
   const [name, setName] = useState("")
+  // const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [matchdata, setMatchData] = useState<MatchData | null>(null)
 
+// console.log("[+]test if match data jat f prop mn card => ",matchdata)
 
   useEffect(() => {
     const get_profile = async () => {
+
       const profile = await endpoints.me();
-      setName(profile.data.data.userName)
+
+      // console.log("[+]",profile)
+
+      setName(profile.data?.userName)
       // console.log(profile.data.data.userName)
+
     }
     const start_Camera = async () => {
       try {
+
         const camera_data = await mediaDevices.getUserMedia({
           video: true,
           audio: true
         })
+
         setStream(camera_data)
+
           socket.on("connect", () => {
-              console.log("your id socket", socket.id)
+              // console.log("your id socket", socket.id)
           })
+
           await connect_Socket()
 
-          // socket.on("matching:matched", (data) => {
-          //     console.log("data",data);
-          // });
-          
       } catch (error) {
+
         console.warn('Camera or microphone access is unavailable', error)
+
       }
     }
-    get_profile()
+    get_profile() // get userName
     start_Camera()
+
   }, [])
 
   return (
     <View style={styles.screen}>
+
         <LinearGradient
           colors={['rgba(7, 28, 42, 0.84)', 'rgba(7, 28, 42, 0.18)', 'transparent']}
           locations={[0, 0.55, 1]}
@@ -94,7 +113,12 @@ export default function Matches() {
                        socket.emit("matching:start")
                        console.log("event send")
             }}><Text style={styles.promptText}>Swipe right to start matching</Text></TouchableOpacity> */}
-            <MatchingSwipe />
+
+            <MatchingSwipe inMatching={setMatchData}/>
+
+          {/* <View style={styles.cameraplace}>
+            <View style={{backgroundColor: "black"}}/>
+          </View> */}
           </View>
 
           <View
@@ -106,23 +130,12 @@ export default function Matches() {
                 style={{
                   width: "100%",
                   height: "100%",
+                  
                 }}
                   objectFit="cover"
+                  mirror={true} // fix face user
               />
               )}
-
-                {stream && (
-            <RTCView
-              streamURL={stream.toURL()}
-              style={{
-                width: "100%",
-                height: "100%",
-                
-              }}
-                objectFit="cover"
-                mirror={true}
-              />
-            )}
 
           </View>
 
@@ -267,6 +280,7 @@ const styles = StyleSheet.create({
     // paddingVertical: 12,
     // transform: [{ translateY: -22 }],
   },
+
   promptText: {
     color: darkColors.text.secondary,
     fontSize: 16,

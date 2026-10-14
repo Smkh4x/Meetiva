@@ -13,7 +13,7 @@ export default function Discover() {
 
   const button_handle = async () => {
     try {
-      console.log("test")
+      console.log("[+] => here in frontend discover")
       const stream = await mediaDevices.getUserMedia({
         video: true,
         audio: true
@@ -23,7 +23,7 @@ export default function Discover() {
         router.push('/(tabs)/matches')
       }
       // return permetion
-      console.log("cemera and microphone is done")
+      // console.log("cemera and microphone is done")
     } catch (err) {
       console.log("Error accessing media devices:", err);
       

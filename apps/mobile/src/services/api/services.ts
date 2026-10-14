@@ -1,3 +1,4 @@
+import axios from "axios";
 import api from "./api";
 
 class endpoints {
@@ -74,9 +75,9 @@ class endpoints {
         try {
             const result = await api.post("/api/users/me", token)
             // console.log("me",result.data.data.data.userName)
-            return result.data;
+            return result.data.data;
         } catch (err) {
-            console.log(err)
+            console.log("[-] err 00",err)
             throw err
         }
 

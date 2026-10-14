@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 class asyncStorage {
     store_token = async (token:string) => {
@@ -6,9 +7,14 @@ class asyncStorage {
     }
 
     get_token = async () => {
-        const result = await AsyncStorage.getItem("token")
-        console.log("result storage =>",result)
-        return result;
+        try {
+            const result = await AsyncStorage.getItem("token")
+            // console.log("result storage =>",result)
+            return result;            
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 }
 
