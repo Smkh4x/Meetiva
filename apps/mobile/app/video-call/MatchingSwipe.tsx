@@ -1,29 +1,12 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { Text, StyleSheet } from 'react-native';
 import { ActivityIndicator } from "react-native";
-
-import Animated, { 
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring
-  } from 'react-native-reanimated';
-
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { Gesture, GestureDetector, } from 'react-native-gesture-handler';
 import { useWindowDimensions } from "react-native";
 import { useState, useCallback, useEffect } from 'react';
 import { scheduleOnRN } from 'react-native-worklets';
 import { socket } from '@/src/services/socket/socket';
-
-/*
-
-data :  {
-"role": "send-offer", 
-"roomId": "7d058631-efa5-44a0-9481-0171a5960902", 
-"socketId": "xEUNX1hp1_pMUD7PAAAA", 
-"userId": 1, 
-"username": "youssef123"}
-
-*/
+// import { LinearGradient } from 'expo-linear-gradient';
 
 export type MatchData = {
   userId: number,
@@ -35,18 +18,16 @@ export type MatchData = {
 
 type Props = {
   inMatching: (data: MatchData) => void;
-  // onSwipeNext: () => void;
 }
 
 export default function MatchingSwipe({inMatching}: Props) {
 
   const translateX = useSharedValue(0);
-  
   const { width } = useWindowDimensions();
   const swap_left = width / 2; // width / 2 keeep swaping animation
   const swap_rigth = swap_left * -1; // swap left take width / 2 * -1 result negative number keep swaping animationn
-  const [hasStarted, setHasStarted] = useState(false); // track if user start matching
 
+  const [hasStarted, setHasStarted] = useState(false); // track if user start matching
 
   const [isSearching, setIsSearching] = useState(false)
   const [matchedUser, setMatchedUser] = useState<any>(null)
@@ -136,6 +117,9 @@ else if(translateX.value >= swap_left){
   return (
     <GestureDetector gesture={fingerTracker}>
       <Animated.View style={[styles.card, cardStyle]}>
+        {/*
+        here the savezone swaping 
+        */}
         {/* <LinearGradient
             colors={['rgba(7, 28, 42, 0.84)', 'rgba(7, 28, 42, 0.18)', 'transparent']}
             locations={[0, 0.55, 1]}

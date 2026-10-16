@@ -7,11 +7,28 @@ const matchingService = new MatchingService();
 class MatchingSocket {
   constructor(io) {
     this.io = io;
+    this.online_users = []
   }
 
   register() {
     this.io.on("connection", (socket) => {
+
       console.log("your socket ID:", socket.id, "and id user", socket.userId);
+
+      const alreadyExist = this.online_users.some((user) => user.socketId === socket.id)
+      if(!alreadyExist){
+        this.online_users.push({
+          socketId: socket.id
+        });
+      }
+    this.io.emit("users:count", this.online_users.length)
+
+    console.log("[+] new user :",this.online_users)
+
+      socket.on("disconnect", () => {
+        this.online_users = this.online_users.filter((user) => user.socketId !== socket.id)
+        this.io.emit("users:online", this.online_users)
+      })
 
       socket.on("matching:start", async () => {
 
@@ -57,6 +74,7 @@ class MatchingSocket {
           console.log("all done")
         }
       });
+
       socket.on("webrtc:ready", ({roomId}) => {
         if (!roomId || !socket.rooms.has(roomId)) return;
           socket.to(roomId).emit("webrtc:peer-ready", {

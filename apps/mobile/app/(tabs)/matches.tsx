@@ -27,11 +27,38 @@ export default function Matches() {
   // const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const [matchdata, setMatchData] = useState<MatchData | null>(null)
-  const [loadcamera, setLoadCamera] = useState(true)
+  // const [loadcamera, setLoadCamera] = useState(true)
 
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
 
+  useEffect(() => {
+    const get_profile = async () => {
 
+      const profile = await endpoints.me();
+      setName(profile.data?.userName)
+
+    }
+    const start_Camera = async () => {
+      try {
+
+        const camera_data = await mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        })
+        
+        setStream(camera_data)
+
+      } catch (error) {
+
+        console.warn('Camera or microphone access is unavailable', error)
+
+      }
+    }
+    get_profile() // get userName
+    start_Camera()
+
+  }, [])
+  
 // console.log("[+]test if match data jat f prop mn card => ",matchdata)
 useEffect(() => {
   if (!matchdata || !stream) return;
@@ -144,109 +171,7 @@ useEffect(() => {
     }
   };
 }, [stream, matchdata]);
-//   useEffect(() => {
-//     if(!matchdata || !stream) return;
 
-//     const pc_user = new RTCPeerConnection({
-//       iceServers: [
-//         {
-//           url: 'stun:stun.l.google.com:19302' // stun server configuration
-//         }
-//       ]
-//     })
-//     peerConnection.current = pc_user;
-
-//   const pendingCandidates: RTCIceCandidateInit[] = []; // save conditate mo2a9atan
-//   let remoteDescSet = false; // 
-
-//     stream.getTracks().forEach((track) => {
-//       pc_user.addTrack(track, stream)
-//     })
-
-//     pc_user.onicecandidate = (event:any) => {
-//   if (!event.candidate) return;
-
-//   socket.emit("webrtc:ice-candidate", {
-//     roomId: matchdata.roomId,
-//     candidate: event.candidate.toJSON(),
-//   });
-//   };
-
-//   pc_user.ontrack = (event:any) => {
-//   const [remoteStream] = event.streams;
-
-//   if (remoteStream && remoteVideoRef.current) {
-//     remoteVideoRef.current.srcObject = remoteStream;
-//   }
-// };
-
-//     const handlePeerReady = (data: {
-//       roomId: string;
-//       fromSocketId: string;
-//     }) => {
-//       if(data.roomId !== matchdata.roomId || data.fromSocketId !== matchdata.socketId) return
-//     } 
-
-//   socket.on("webrtc:peer-ready", handlePeerReady);
-//   socket.on("webrtc:offer", handleOffer);
-//   socket.on("webrtc:answer", handleAnswer);
-//   socket.on("webrtc:ice-candidate", handleIceCandidate);
-
-//     socket.emit("webrtc:ready", {
-//     roomId: matchdata.roomId,
-//   });
-
-//   return () => {
-//     socket.off("webrtc:peer-ready", handlePeerReady);
-//     socket.off("webrtc:offer", handleOffer);
-//     socket.off("webrtc:answer", handleAnswer);
-//     socket.off("webrtc:ice-candidate", handleIceCandidate);
-
-//     pc_user.close();
-
-//     if(peerConnection.current === pc_user){
-//       peerConnection.current === null;
-//     }
-//   }
-//   },[stream,matchdata])
-
-  useEffect(() => {
-    const get_profile = async () => {
-
-      const profile = await endpoints.me();
-
-      // console.log("[+]",profile)
-
-      setName(profile.data?.userName)
-      // console.log(profile.data.data.userName)
-
-    }
-    const start_Camera = async () => {
-      try {
-
-        const camera_data = await mediaDevices.getUserMedia({
-          video: true,
-          audio: true
-        })
-
-        setStream(camera_data)
-
-          socket.on("connect", () => {
-              // console.log("your id socket", socket.id)
-          })
-
-          await connect_Socket()
-
-      } catch (error) {
-
-        console.warn('Camera or microphone access is unavailable', error)
-
-      }
-    }
-    get_profile() // get userName
-    start_Camera()
-
-  }, [])
 
   return (
     <View style={styles.screen}>
@@ -256,7 +181,7 @@ useEffect(() => {
             width: '100%',
             height: '100%',
             zIndex: 0,
-            backgroundColor: 'grey',
+            backgroundColor: 'rgba(22, 160, 214, 0.9)',
       }}>
         <View style={{flex: 1, justifyContent: "center", alignItems: 'center'}}>
         {remoteStream && (

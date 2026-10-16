@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 class asyncStorage {
     store_token = async (token:string) => {
@@ -15,6 +14,10 @@ class asyncStorage {
             console.log(error)
         }
 
+    }
+    remove_token = async () => {
+        const result = AsyncStorage.removeItem('token')
+        console.log("remove token successfulyy , logout user",result)
     }
 }
 

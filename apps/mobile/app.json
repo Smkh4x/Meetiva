@@ -1,30 +1,30 @@
 {
   "expo": {
-    "name": "Meetiva",
-    "slug": "Meetiva",
+    "name": "Meeiva",
+    "slug": "Meeiva",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "meetiva",
+    "scheme": "meeiva",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.Meetiva",
+      "bundleIdentifier": "com.anonymous.Meeiva",
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Meetiva uses your microphone for one-to-one video calls.",
-        "NSCameraUsageDescription": "Meetiva uses your camera for one-to-one video calls."
+        "NSMicrophoneUsageDescription": "Meeiva uses your microphone for one-to-one video calls.",
+        "NSCameraUsageDescription": "Meeiva uses your camera for one-to-one video calls."
     }
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/Meetiva.jpg"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/Meetiva-logo.png",
+          "image": "./assets/Meetiva.jpg",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
